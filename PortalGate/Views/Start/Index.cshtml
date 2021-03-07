@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Железнодорожный веб-портал</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <main>
+        <header class="total-block">
+            Российские Железные Дороги
+        </header>
+        <article class="total-block">
+            <p class="signIn"><b id="signIn">Войти в систему</b></p>
+        </article>
+        <footer class="total-block">
+            code.drummer87@gmail.com
+        </footer>
+    </main>
+    <div class="nap">
+        <div class="railroads">
+            <h2>Выберите железную дорогу</h2>
+            <hr />
+        </div>
+        <div class="units">
+            <h2>Выберите предприятие</h2>
+            <hr />
+            <ul class="industries"></ul>
+            <hr />
+        </div>
+        <div class="pageTurner">
+            <img id="arrowLeft" src="/images/arrows/right.png" title="Назад" />
+            <img id="arrowRight" src="/images/arrows/right.png" title="Вперёд" />
+        </div>
+        <div class="transition">
+            <p id="goOver" title="Перейти на страницу входа выбранного предприятия">Перейти</p>
+            <p id="currentMessage">&nbsp;</p>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/js/site.js"></script>
+</body>
+</html>
