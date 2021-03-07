@@ -1,30 +1,11 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.1": {
-      "RailroadPortalClassLibrary/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v3.1",
-        "compile": {
-          "bin/placeholder/RailroadPortalClassLibrary.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/RailroadPortalClassLibrary.dll": {}
-        }
-      }
-    }
+    ".NETCoreApp,Version=v3.1": {}
   },
-  "libraries": {
-    "RailroadPortalClassLibrary/1.0.0": {
-      "type": "project",
-      "path": "../RailroadPortalClassLibrary/RailroadPortalClassLibrary.csproj",
-      "msbuildProject": "../RailroadPortalClassLibrary/RailroadPortalClassLibrary.csproj"
-    }
-  },
+  "libraries": {},
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.1": [
-      "RailroadPortalClassLibrary >= 1.0.0"
-    ]
+    ".NETCoreApp,Version=v3.1": []
   },
   "packageFolders": {
     "C:\\Users\\Vadik\\.nuget\\packages\\": {},
@@ -33,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Vadik\\Desktop\\WebPortal\\TCH2_WestSiberianRailroad\\TCH2_WestSiberianRailroad.csproj",
-      "projectName": "TCH2_WestSiberianRailroad",
-      "projectPath": "C:\\Users\\Vadik\\Desktop\\WebPortal\\TCH2_WestSiberianRailroad\\TCH2_WestSiberianRailroad.csproj",
+      "projectUniqueName": "C:\\Users\\Vadik\\Desktop\\WebPortal\\RailroadPortalClassLibrary\\RailroadPortalClassLibrary.csproj",
+      "projectName": "RailroadPortalClassLibrary",
+      "projectPath": "C:\\Users\\Vadik\\Desktop\\WebPortal\\RailroadPortalClassLibrary\\RailroadPortalClassLibrary.csproj",
       "packagesPath": "C:\\Users\\Vadik\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Vadik\\Desktop\\WebPortal\\TCH2_WestSiberianRailroad\\obj\\",
+      "outputPath": "C:\\Users\\Vadik\\Desktop\\WebPortal\\RailroadPortalClassLibrary\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -56,11 +37,7 @@
       "frameworks": {
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
-          "projectReferences": {
-            "C:\\Users\\Vadik\\Desktop\\WebPortal\\RailroadPortalClassLibrary\\RailroadPortalClassLibrary.csproj": {
-              "projectPath": "C:\\Users\\Vadik\\Desktop\\WebPortal\\RailroadPortalClassLibrary\\RailroadPortalClassLibrary.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {
@@ -83,9 +60,6 @@
         "assetTargetFallback": true,
         "warn": true,
         "frameworkReferences": {
-          "Microsoft.AspNetCore.App": {
-            "privateAssets": "none"
-          },
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
