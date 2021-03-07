@@ -1,0 +1,21 @@
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE ID = OBJECT_ID(N'TCH2_WestSiberianRailroadDb'))
+USE TCH2_WestSiberianRailroadDb;
+
+GO
+
+IF OBJECT_ID('Users', 'u') IS NULL
+CREATE TABLE Users
+(
+	Id INT IDENTITY(1, 1) PRIMARY KEY,
+	Email NVARCHAR(50) UNIQUE NOT NULL,
+	Password NVARCHAR(50) NOT NULL,
+	Salt BINARY(16),
+	FirstName NVARCHAR(50),
+	LastName NVARCHAR(50),
+	MiddleName NVARCHAR(50),
+	PositionId INT,
+	RoleId INT,
+
+	FOREIGN KEY (PositionId) REFERENCES Positions(Id) ON DELETE CASCADE,
+	FOREIGN KEY (RoleId) REFERENCES Roles(Id) ON DELETE CASCADE
+)
