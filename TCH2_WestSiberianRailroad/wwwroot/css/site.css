@@ -1,71 +1,82 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+﻿﻿@font-face {
+    font-family: serpentine;
+    src: url(/fonts/Copperplate.ttf);
 }
 
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #1c1c1c;
+    color: #04eaed;
+    text-align: center;
+    font-family: 'Franklin Gothic';
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    display: grid;
+    grid-template-areas: "H" "A" "F";
+    grid-template-columns: 1fr;
+    grid-template-rows: 15% 1fr 8%;
+    height: 99vh;
+    grid-gap: 4px;
 }
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+
+header {
+    grid-template: H;
+    font-family: serpentine;
+    font-size: 1.3rem;
 }
+
+footer {
+    grid-template: F;
+    font-size: 1.1rem;
+}
+
+article {
+    grid-template: A;
+}
+
+hr {
+    width: 75%;
+    border: none;
+    outline: none;
+    height: 2px;
+    background-color: #04eaed;
+}
+
+fieldset {
+    width: 15%;
+    margin: 10% auto;
+    border: 1px solid #04eaed;
+    border-radius: 4px;
+}
+
+button {
+    cursor: pointer;
+}
+
+input, button {
+    font-family: 'Franklin Gothic';
+    font-size: 1.1rem;
+    margin: 2px 0;
+    border-radius: 4px;
+    background-color: #a8fafa;
+    width: 200px;
+    height: 25px;
+    padding-left: 7px;
+}
+
+#signInButton {
+    font-size: 1rem;
+    margin: 10px 0;
+    width: 150px;
+    height: 23px;
+}
+
+    #signInButton:hover {
+        box-shadow: 0px 0px 7px 3px #a8fafa;
+    }
+
+    #signInButton:active {
+        background-color: #04eaed;
+    }

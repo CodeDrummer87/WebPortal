@@ -6,7 +6,8 @@ GO
 IF OBJECT_ID('Sessions', 'u') IS NULL
 CREATE TABLE Sessions
 (
-	SessionId VARBINARY(8000),
+	Id INT IDENTITY(1, 1) PRIMARY KEY,
+	SessionId NVARCHAR(100),
 	UserId INT,
 	Created DateTime,
 	Expired DateTime
