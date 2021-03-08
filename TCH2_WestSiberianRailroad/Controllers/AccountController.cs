@@ -40,6 +40,24 @@ namespace TCH2_WestSiberianRailroad.Controllers
             return null;
         }
 
+        public async Task<string> SaveUserData([FromBody] UserFullName fullName)
+        {
+            string sessionId = contextAccessor.HttpContext.Request.Cookies["SessionId"];
+
+            int userId = db.Sessions.FirstOrDefault(s => s.SessionId == sessionId).UserId;
+            User user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
+            {
+                user.FirstName = fullName.FirstName;
+                user.LastName = fullName.LastName;
+                user.MiddleName = fullName.MiddleName;
+                await db.SaveChangesAsync();
+                return "/Content/Admin";
+            }
+
+            return String.Empty;
+        }
+
         private string GetHashImage(string pswrd, byte[] salt)
         {
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(

@@ -41,6 +41,74 @@
     cursor: pointer;
 }
 
-    #mainNav > p:hover {
-        color: #00ff21;
-    }
+#mainNav > p:hover {
+    color: #00ff21;
+}
+
+table {
+    width: 80%;
+    margin: 2% auto;
+    border-radius: 4px;
+}
+
+table caption {
+    background-color: #3f3c3c;
+    border-bottom: 1px solid #ffd800;
+    font-family: serpentine;
+}
+
+table tr {
+    cursor: pointer;
+}
+
+table tr:hover {
+    color: gold;
+}
+
+table th {
+    background-color: #484646;
+    border-bottom: 2px solid #ffd800;
+    color: #ff6a00;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+table td {
+    padding-left: 20px;
+    text-align: left;
+}
+
+.nap {
+    background-color: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    overflow: auto;
+    display: none;
+}
+
+.pop-up-nameSetting {
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 20%;
+    height: 30%;
+    margin: 12% auto;
+    background-color: #1b1b1b;
+    border: 1px solid #48ff5b;
+    border-radius: 5%;
+    z-index: 150;
+    transition: all 4.5s ease-in;
+    box-shadow: 0px 0px 7px 3px #48ff5b;
+    display: none;
+}
+
+#currentUserFullName {
+    color: #ffd800;
+}

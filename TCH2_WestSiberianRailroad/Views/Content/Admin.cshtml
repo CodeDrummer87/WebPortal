@@ -1,11 +1,14 @@
-﻿@{
+﻿@using RailroadPortalClassLibrary
+@model User
+
+@{
     ViewData["Title"] = $"Личный кабинет";
 }
 
 
 <div class="main">
     <div class="pageBlock" id="mainHeader">
-        <h3>Личный кабинет системного администратора</h3>
+        <h3>Личный кабинет системного администратора: <span id="currentUserFullName">@Model.LastName @Model.FirstName @Model.MiddleName</span></h3>
     </div>
     <div class="pageBlock" id="mainNav">
         <h3>Справочники</h3>
@@ -14,4 +17,17 @@
     </div>
     <div class="pageBlock" id="mainArticle"></div>
     <div class="pageBlock" id="mainMessages"></div>
+</div>
+
+<div class="nap"></div>
+
+<div class="pop-up-nameSetting">
+    <fieldset>
+        <legend>Укажите свои данные</legend>
+        <input type="text" id="pop-up-lastname" placeholder="Фамилия" autocomplete="off" /><br />
+        <input type="text" id="pop-up-firstname" placeholder="Имя" autocomplete="off" /><br />
+        <input type="text" id="pop-up-middlename" placeholder="Отчество" autocomplete="off" /><br />
+        <button id="pop-up-submitData">Сохранить</button>
+    </fieldset>
+    <p id="pop-up-currentMessage">&nbsp;</p>
 </div>
