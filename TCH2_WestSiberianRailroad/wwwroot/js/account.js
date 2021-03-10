@@ -54,6 +54,7 @@ function GetPositions() {
 	$.ajax({
 		url: 'https://localhost:44356/content/getpositions',
 		method: 'GET',
+		//contentType: 'application/json',
 		success: function (response) {
 			let result = JSON.parse(response);
 			console.log(result);

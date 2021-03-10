@@ -44,17 +44,20 @@ namespace TCH2_WestSiberianRailroad.Controllers
         [HttpGet]
         public string GetPositions()
         {
-            //.:: Сделать LEFT JOIN для отображения полного списка должностей
-            var result = db.Users.GroupBy(u => u.PositionId).Select(g => new
+            var result = db.Positions.GroupJoin(db.Users.GroupBy(u => u.PositionId).Select(g => new
             {
                 PositionId = g.Key,
                 Count = g.Count()
-            }).Join(db.Positions, a => a.PositionId, p => p.Id, (a, p) => new
-            {
-                p.Id,
-                p.FullName,
-                a.Count
-            });
+            }),
+                        p => p.Id,
+                        u => u.PositionId,
+                        (p, u) => new { p, u })
+                .SelectMany(all => all.u.DefaultIfEmpty(), (position, user) => new
+                {
+                    Id = position.p.Id,
+                    FullName = position.p.FullName,
+                    Count = user.Count
+                }).ToList();
 
             return JsonConvert.SerializeObject(result);
         }
