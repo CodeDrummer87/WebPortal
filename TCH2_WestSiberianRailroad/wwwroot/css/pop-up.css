@@ -1,0 +1,80 @@
+﻿.pop-up-nameSetting,
+.pop-up-createNewEmployee {
+    flex-direction: column;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #1b1b1b;
+    z-index: 150;
+    transition: all 4.5s ease-in;   
+    display: none;
+}
+
+.pop-up-nameSetting {
+    width: 20%;
+    height: 33%;
+    margin: 12% auto;
+    border-radius: 5%;
+    border: 1px solid #48ff5b;
+    box-shadow: 0px 0px 7px 3px #48ff5b;
+}
+
+.pop-up-createNewEmployee {
+    flex-direction: column;
+    align-content: start;
+    width: 45%;
+    height: 51%;
+    margin: 10% auto;
+    border-radius: 1%;
+    border: 1px solid gold;
+    box-shadow: 0px 0px 7px 3px orange;
+}
+
+.pop-up-createNewEmp-block {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+}
+
+#headerBasement h3 {
+    margin: 2% 7%;
+    border-radius: 3px;
+    border-bottom: 1px solid #ffd800;
+    font-family: serpentine;
+    background-color: #2e2e2e;
+    color: #ff6a00;
+}
+
+.pop-up-createNewEmpl-block > fieldset {
+    margin: 2% auto;
+}
+
+.pop-up-createNewEmpl-block > hr {
+    width: 85%;
+    outline: none;
+    border: none;
+    height: 1px;
+    background-color: #ffd800;
+}
+
+.pop-up-createNewEmpl-block #upperBasement,
+.pop-up-createNewEmpl-block #lowerBasement {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#upperBasement  select {
+    width: 33%;
+    font-family: Verdana;
+    font-weight: 500;
+    border-radius: 2px;
+    background-color: #a8fafa;
+}
+
+#lowerBasement button {
+    background-color: #fbe56c;
+    width: 27%;
+}

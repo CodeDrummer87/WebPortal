@@ -11,11 +11,21 @@
         <h3>Личный кабинет системного администратора: <span id="currentUserFullName">@Model.LastName @Model.FirstName @Model.MiddleName</span></h3>
     </div>
     <div class="pageBlock" id="mainNav">
-        <h3>Справочники</h3>
-        <p id="employees">Сотрудники</p>
-        <p id="positions">Должности</p>
+        <div class="headerMainNav">
+            <h3>Справочники</h3>
+        </div>
+        <button class="mainNavButton" id="employees">Сотрудники</button>
+        <button class="mainNavButton" id="positions">Должности</button>
+        <button class="mainNavButton" id="roles">Роли</button>
     </div>
-    <div class="pageBlock" id="mainArticle"></div>
+    <div class="pageBlock" id="mainArticle">
+        <div id="infoDisplay"></div>
+        <div id="controlPanel">
+            <button id="addNewEntity">Добавить</button>
+            <button id="updateEntity">Изменить</button>
+            <button id="deleteEntity">Удалить</button>
+        </div>
+    </div>
     <div class="pageBlock" id="mainMessages"></div>
 </div>
 
@@ -30,4 +40,28 @@
         <button id="pop-up-submitData">Сохранить</button>
     </fieldset>
     <p id="pop-up-currentMessage">&nbsp;</p>
+</div>
+
+<div class="pop-up-createNewEmployee">
+    <div class="pop-up-createNewEmpl-block" id="headerBasement">
+        <h3>Данные нового сотрудника</h3>
+        <p>Регистрация аккаунта по Email: <input type="text" id="inpCreateEmail" placeholder="Email" autofocusa autocomplete="off" /></p>
+        <hr />
+    </div>
+    <div class="pop-up-createNewEmpl-block">
+        <fieldset>
+            <legend>ФИО</legend>
+            <input type="text" id="inpCreateLastName" placeholder="Фамилия" autocomplete="off" /><br />
+            <input type="text" id="inpCreateFirstName" placeholder="Имя" autocomplete="off" /><br />
+            <input type="text" id="inpCreateMiddleName" placeholder="Отчество" autocomplete="off" /><br />
+        </fieldset>
+    </div>
+    <div class="pop-up-createNewEmpl-block" id="upperBasement">
+        <p>Роль:&nbsp;<select id="selectRole"></select>&nbsp;Должность:&nbsp;<select id="selectPosition"></select></p>
+    </div>
+    <div class="pop-up-createNewEmpl-block" id="lowerBasement">
+        <button id="executeCreatingNewAccount">Создать</button>
+        <button id="clearCreatingNewAccount">Очистить</button>
+        <button id="cancelCreatingNewAccount">Отмена</button>
+    </div>
 </div>

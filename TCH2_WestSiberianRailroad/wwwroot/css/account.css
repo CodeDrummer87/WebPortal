@@ -15,10 +15,15 @@
 
 #mainNav {
     grid-area: mN;
+    padding: 0;
+    margin: 0;
 }
 
 #mainArticle {
     grid-area: mA;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
 }
 
 #mainMessages {
@@ -46,7 +51,7 @@
 }
 
 table {
-    width: 80%;
+    width: 90%;
     margin: 2% auto;
     border-radius: 4px;
 }
@@ -78,7 +83,7 @@ table td {
 }
 
 .nap {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
     position: fixed;
     top: 0;
     left: 0;
@@ -89,26 +94,49 @@ table td {
     display: none;
 }
 
-.pop-up-nameSetting {
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 20%;
-    height: 30%;
-    margin: 12% auto;
-    background-color: #1b1b1b;
-    border: 1px solid #48ff5b;
-    border-radius: 5%;
-    z-index: 150;
-    transition: all 4.5s ease-in;
-    box-shadow: 0px 0px 7px 3px #48ff5b;
-    display: none;
-}
-
 #currentUserFullName {
     color: #ffd800;
+}
+
+.headerMainNav {
+    height: 4%;
+    margin: 7px;
+    border-radius: 3px;
+    border-bottom: 1px solid #ffd800;
+    font-family: serpentine;
+    background-color: #2e2e2e;
+    color: #ff6a00;
+}
+
+.mainNavButton,
+#controlPanel>button {
+    background-color: #fbe56c;
+    width: 85%;
+}
+
+.mainNavButton:hover,
+#controlPanel>button:hover,
+#lowerBasement button:hover {
+    background-color: #48ff5b;
+}
+
+.mainNavButton:active,
+#controlPanel>button:active,
+#lowerBasement button:active {
+    background-color: #ff9600;
+}
+
+#infoDisplay {
+    height: 95%;
+}
+
+#controlPanel {
+    display: none;
+    height: 5%;
+}
+
+#controlPanel>button {
+    width: 33%;
+    height: 20px;
+    font-size: 0.9rem;
 }

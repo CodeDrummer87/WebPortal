@@ -68,3 +68,14 @@ function ClearForm() {
     $('#inpEmail').val('');
     $('#inpPassword').val('');
 }
+
+function DisplayModal(id, isShow) {
+    if (isShow) {
+        $('.nap').css('display', 'flex');
+        $(id).css('display', 'flex');
+    }
+    else {
+        $('.nap').css('display', 'none');
+        $(id).css('display', 'none');
+	}
+}

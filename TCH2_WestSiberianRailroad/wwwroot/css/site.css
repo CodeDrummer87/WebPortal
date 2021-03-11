@@ -40,15 +40,21 @@ hr {
     width: 75%;
     border: none;
     outline: none;
-    height: 2px;
-    background-color: #04eaed;
+    height: 1px;
+    background-color: #ffd800;
 }
 
-fieldset {
+main > fieldset,
+.pop-up-nameSetting fieldset,
+.pop-up-createNewEmpl-block fieldset {
     width: 15%;
-    margin: 10% auto;
     border: 1px solid #04eaed;
     border-radius: 4px;
+}
+
+main > fieldset,
+.pop-up-nameSetting fieldset {
+    margin: 10% auto;
 }
 
 button {
@@ -73,10 +79,10 @@ input, button {
     height: 23px;
 }
 
-    #signInButton:hover {
-        box-shadow: 0px 0px 7px 3px #a8fafa;
-    }
+#signInButton:hover {
+    box-shadow: 0px 0px 7px 3px #a8fafa;
+}
 
-    #signInButton:active {
-        background-color: #04eaed;
-    }
+#signInButton:active {
+    background-color: #04eaed;
+}

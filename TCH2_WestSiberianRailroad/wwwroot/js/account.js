@@ -7,11 +7,18 @@
 	});
 
 	$('#positions').click(function () {
+		currentEntities = 'positions';
 		GetPositions();
 	});
 
 	$('#employees').click(function () {
+		currentEntities = 'employees';
 		GetEmployees();
+	});
+
+	$('#roles').click(function () {
+		currentEntities = 'roles';
+		GetRoles();
 	});
 });
 
@@ -21,12 +28,10 @@ function CheckForName() {
 		method: 'GET',
 		success: function (response) {
 			if (!response) {
-				$('.nap').css('display', 'block');
-				$('.pop-up-nameSetting').css('display', 'flex');
+				DisplayModal('.pop-up-nameSetting', true);
 			}
 			else {
-				$('.nap').css('display', 'none');
-				$('.pop-up-nameSetting').css('display', 'none');
+				DisplayModal('.pop-up-nameSetting', false);
 			}
 		},
 		error: function () {
@@ -54,12 +59,25 @@ function GetPositions() {
 	$.ajax({
 		url: 'https://localhost:44356/content/getpositions',
 		method: 'GET',
-		//contentType: 'application/json',
 		success: function (response) {
 			let result = JSON.parse(response);
-			console.log(result);
 			DisplayPositions(result);
 			DisplayMessage("Список текущих должностей в ТЧЭ-2 'Омск' загружен", true);
+		},
+		error: function () {
+			DisplayMessage("Ошибка выполнения запроса", false);
+		}
+	});
+}
+
+function GetRoles() {
+	$.ajax({
+		url: 'https://localhost:44356/content/getroles',
+		method: 'GET',
+		success: function (response) {
+			let result = JSON.parse(response);
+			DisplayRoles(result);
+			DisplayMessage("Список ролей для сайта ТЧЭ-2 'Омск' загружен", true);
 		},
 		error: function () {
 			DisplayMessage("Ошибка выполнения запроса", false);
@@ -79,8 +97,8 @@ function DisplayMessage(message, success) {
 }
 
 function DisplayEmployees(result) {
-	$('#mainArticle table').remove();
-	let div = document.querySelector('#mainArticle');
+	$('#infoDisplay table').remove();
+	let div = document.querySelector('#infoDisplay');
 	let table = document.createElement('table');
 	let caption = document.createElement('caption');
 	caption.innerText = 'Список сотрудников ТЧЭ-2 "Омск"';
@@ -100,6 +118,7 @@ function DisplayEmployees(result) {
 		else {
 			$(row).css('background-color', '#3f3c3c');
 		}
+		$(row).attr('userId', result[i].Id);
 		GetTdForTable(table, row, result[i].LastName);
 		GetTdForTable(table, row, result[i].FirstName);
 		GetTdForTable(table, row, result[i].MiddleName);
@@ -107,11 +126,12 @@ function DisplayEmployees(result) {
 		GetTdForTable(table, row, result[i].Email);
 	}
 	div.appendChild(table);
+	$('#controlPanel').css('display', 'block');
 }
 
 function DisplayPositions(result) {
-	$('#mainArticle table').remove();
-	let div = document.querySelector('#mainArticle');
+	$('#infoDisplay table').remove();
+	let div = document.querySelector('#infoDisplay');
 	let table = document.createElement('table');
 	let caption = document.createElement('caption');
 	caption.innerText = 'Список должностей ТЧЭ-2 "Омск"';
@@ -129,11 +149,42 @@ function DisplayPositions(result) {
 		else {
 			$(row).css('background-color', '#3f3c3c');
 		}
+		$(row).attr('positionId', result[i].Id);
 		GetTdForTable(table, row, i + 1);
 		GetTdForTable(table, row, result[i].FullName);
 		GetTdForTable(table, row, result[i].Count);
 	}
 	div.appendChild(table);
+	$('#controlPanel').css('display', 'block');
+}
+
+function DisplayRoles(result) {
+	$('#infoDisplay table').remove();
+	let div = document.querySelector('#infoDisplay');
+	let table = document.createElement('table');
+	let caption = document.createElement('caption');
+	caption.innerText = 'Список ролей на сайте ТЧЭ-2 "Омск"';
+	table.appendChild(caption);
+	let hRow = document.createElement('tr');
+	GetThForTable(table, hRow, "№");
+	GetThForTable(table, hRow, "Наименование роли");
+	GetThForTable(table, hRow, "Сотрудников с данной ролью");
+	let rows = result.length;
+	for (let i = 0; i < rows; i++) {
+		let row = document.createElement('tr');
+		if (i % 2 == 0) {
+			$(row).css('background-color', '#2e2e2e');
+		}
+		else {
+			$(row).css('background-color', '#3f3c3c');
+		}
+		$(row).attr('roleId', result[i].Id);
+		GetTdForTable(table, row, i + 1);
+		GetTdForTable(table, row, result[i].RoleName);
+		GetTdForTable(table, row, result[i].Count);
+	}
+	div.appendChild(table);
+	$('#controlPanel').css('display', 'block');
 }
 
 function GetThForTable(table, row, value) {
@@ -165,8 +216,7 @@ function SaveCurrentUserData() {
 			data: JSON.stringify(userData),
 			success: function (response) {
 				if (response != '') {
-					$('.nap').css('display', 'none');
-					$('.pop-up-nameSetting').css('display', 'none');
+					DisplayModal('.pop-up-nameSetting', false);
 					window.location.href = response;
 				}
 				else {

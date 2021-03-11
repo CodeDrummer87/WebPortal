@@ -13,4 +13,8 @@ CREATE TABLE Roles
 GO
 
 INSERT INTO Roles
-VALUES ('Admin'), ('Employee'), ('Instructor'), ('Engineer')
+VALUES 
+	('Системный Администратор'),
+	('Сотрудник'),
+	('Инструктор'),
+	('Инженер')

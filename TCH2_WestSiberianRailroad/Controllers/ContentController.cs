@@ -63,6 +63,27 @@ namespace TCH2_WestSiberianRailroad.Controllers
         }
 
         [HttpGet]
+        public string GetRoles()
+        {
+            var result = db.Roles.GroupJoin(db.Users.GroupBy(u => u.RoleId).Select(g => new
+            {
+                RoleId = g.Key,
+                Count = g.Count()
+            }),
+                        r => r.Id,
+                        u => u.RoleId,
+                        (r, u) => new { r, u })
+                .SelectMany(all => all.u.DefaultIfEmpty(), (role, user) => new
+                {
+                    Id = role.r.Id,
+                    RoleName = role.r.Name,
+                    Count = user.Count
+                }).ToList();
+
+            return JsonConvert.SerializeObject(result);
+        }
+
+        [HttpGet]
         public bool CheckForName()
         {
             string sessionId = contextAccessor.HttpContext.Request.Cookies["SessionId"];

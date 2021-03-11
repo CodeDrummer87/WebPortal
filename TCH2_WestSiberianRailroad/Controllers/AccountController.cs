@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using TCH2_WestSiberianRailroad.Models;
 
@@ -40,6 +41,7 @@ namespace TCH2_WestSiberianRailroad.Controllers
             return null;
         }
 
+        [HttpPost]
         public async Task<string> SaveUserData([FromBody] UserFullName fullName)
         {
             string sessionId = contextAccessor.HttpContext.Request.Cookies["SessionId"];
@@ -56,6 +58,33 @@ namespace TCH2_WestSiberianRailroad.Controllers
             }
 
             return String.Empty;
+        }
+
+        [HttpPost]
+        public async Task<string> CreateNewAccount([FromBody] NewAccountDataModel model)
+        {
+            if (model.Email != null && model.Email != " ")
+            {
+                var salt = GetSalt();
+
+                User newUser = new User
+                {
+                    Email = model?.Email,
+                    Salt = salt,
+                    Password = GetHashImage("12345", salt),
+                    FirstName = model?.FirstName,
+                    LastName = model?.LastName,
+                    MiddleName = model?.MiddleName,
+                    PositionId = model?.PositionId,
+                    RoleId = model?.RoleId
+                };
+
+                await db.Users.AddAsync(newUser);
+                await db.SaveChangesAsync();
+
+                return newUser.Email;
+            }
+            else return String.Empty;
         }
 
         private string GetHashImage(string pswrd, byte[] salt)
@@ -98,6 +127,17 @@ namespace TCH2_WestSiberianRailroad.Controllers
             await db.SaveChangesAsync();
 
             contextAccessor.HttpContext.Response.Cookies.Append("SessionId", session.SessionId);
+        }
+
+        private byte[] GetSalt()
+        {
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            return salt;
         }
     }
 }
