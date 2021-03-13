@@ -1,4 +1,8 @@
-﻿$(document).ready(function () {
+﻿var pageNumber = 0;
+var currentCount = 0;
+var timeoutHandle = 'undefined';
+
+$(document).ready(function () {
 
 	CheckForName();
 
@@ -7,18 +11,45 @@
 	});
 
 	$('#positions').click(function () {
+		pageNumber = 0;
 		currentEntities = 'positions';
 		GetPositions();
 	});
 
 	$('#employees').click(function () {
+		pageNumber = 0;
 		currentEntities = 'employees';
 		GetEmployees();
 	});
 
 	$('#roles').click(function () {
+		pageNumber = 0;
 		currentEntities = 'roles';
 		GetRoles();
+	});
+
+	$('.paginationPart').on('mouseover', 'img', function () {
+		$(this).attr('src', '/images/arrow_hover.png');
+	}).on('mouseout', 'img', function () {
+		$(this).attr('src', '/images/arrow.png');
+	}).on('click', 'img', function () {
+		$(this).attr('src', '/images/arrow_active.png');
+		if ($(this).attr('id') == 'pageRight') {
+			if (pageNumber < Math.round(currentCount / 14)) {
+				++pageNumber;
+			}
+		}
+		else {
+			if (pageNumber > 0) {
+				--pageNumber;
+			}
+		}
+
+		switch (currentEntities) {
+			case 'positions': GetPositions(); break;
+			case 'employees': GetEmployees(); break;
+			case 'roles': GetRoles(); break;
+		}
 	});
 });
 
@@ -42,7 +73,7 @@ function CheckForName() {
 
 function GetEmployees() {
 	$.ajax({
-		url: 'https://localhost:44356/content/getemployees',
+		url: 'https://localhost:44356/content/getemployees?page=' + pageNumber,
 		method: 'GET',
 		success: function (response) {
 			let result = JSON.parse(response);
@@ -57,7 +88,7 @@ function GetEmployees() {
 
 function GetPositions() {
 	$.ajax({
-		url: 'https://localhost:44356/content/getpositions',
+		url: 'https://localhost:44356/content/getpositions?page=' + pageNumber,
 		method: 'GET',
 		success: function (response) {
 			let result = JSON.parse(response);
@@ -72,7 +103,7 @@ function GetPositions() {
 
 function GetRoles() {
 	$.ajax({
-		url: 'https://localhost:44356/content/getroles',
+		url: 'https://localhost:44356/content/getroles?page=' + pageNumber,
 		method: 'GET',
 		success: function (response) {
 			let result = JSON.parse(response);
@@ -86,6 +117,11 @@ function GetRoles() {
 }
 
 function DisplayMessage(message, success) {
+
+	if (timeoutHandle != 'undefined') {
+		clearTimeout(timeoutHandle);
+	}
+
 	if (success) {
 		$('#mainMessages').css('color', '#00ff21').text(message);
 	}
@@ -93,98 +129,129 @@ function DisplayMessage(message, success) {
 		$('#mainMessages').css('color', 'red').text(message);
 	}
 
-	setTimeout(function () { $('#mainMessages').text(''); }, 3500);
+	timeoutHandle = setTimeout(function () { $('#mainMessages').text(''); }, 3500);
 }
 
 function DisplayEmployees(result) {
 	$('#infoDisplay table').remove();
-	let div = document.querySelector('#infoDisplay');
-	let table = document.createElement('table');
-	let caption = document.createElement('caption');
-	caption.innerText = 'Список сотрудников ТЧЭ-2 "Омск"';
-	table.appendChild(caption);
-	let hRow = document.createElement('tr');
-	GetThForTable(table, hRow, "Фамилия");
-	GetThForTable(table, hRow, "Имя");
-	GetThForTable(table, hRow, "Отчество");
-	GetThForTable(table, hRow, "Должность");
-	GetThForTable(table, hRow, "Электронная почта");
-	let rows = result.length;
-	for (let i = 0; i < rows; i++) {
-		let row = document.createElement('tr');
-		if (i % 2 == 0) {
-			$(row).css('background-color', '#2e2e2e');
+
+	$.ajax({
+		url: 'https://localhost:44356/content/getemployeecount',
+		method: 'GET',
+		success: function (count) {
+			currentCount = count;
+
+			let div = document.querySelector('#infoDisplay');
+			let table = document.createElement('table');
+			let caption = document.createElement('caption');
+			caption.innerText = 'Список сотрудников ТЧЭ-2 "Омск"';
+			table.appendChild(caption);
+			let hRow = document.createElement('tr');
+			GetThForTable(table, hRow, "Фамилия");
+			GetThForTable(table, hRow, "Имя");
+			GetThForTable(table, hRow, "Отчество");
+			GetThForTable(table, hRow, "Должность");
+			GetThForTable(table, hRow, "Электронная почта");
+
+			let rows = result.length;
+
+			for (let i = 0; i < rows; i++) {
+				let row = document.createElement('tr');
+				if (i % 2 == 0) {
+					$(row).css('background-color', '#2e2e2e');
+				}
+				else {
+					$(row).css('background-color', '#3f3c3c');
+				}
+				$(row).attr('userId', result[i].Id);
+				GetTdForTable(table, row, result[i].LastName);
+				GetTdForTable(table, row, result[i].FirstName);
+				GetTdForTable(table, row, result[i].MiddleName);
+				GetTdForTable(table, row, result[i].FullName);
+				GetTdForTable(table, row, result[i].Email);
+			}
+			div.appendChild(table);
+			SetControlPanels(count);
 		}
-		else {
-			$(row).css('background-color', '#3f3c3c');
-		}
-		$(row).attr('userId', result[i].Id);
-		GetTdForTable(table, row, result[i].LastName);
-		GetTdForTable(table, row, result[i].FirstName);
-		GetTdForTable(table, row, result[i].MiddleName);
-		GetTdForTable(table, row, result[i].FullName);
-		GetTdForTable(table, row, result[i].Email);
-	}
-	div.appendChild(table);
-	$('#controlPanel').css('display', 'block');
+	});
 }
 
 function DisplayPositions(result) {
 	$('#infoDisplay table').remove();
-	let div = document.querySelector('#infoDisplay');
-	let table = document.createElement('table');
-	let caption = document.createElement('caption');
-	caption.innerText = 'Список должностей ТЧЭ-2 "Омск"';
-	table.appendChild(caption);
-	let hRow = document.createElement('tr');
-	GetThForTable(table, hRow, "№");
-	GetThForTable(table, hRow, "Наименование должности");
-	GetThForTable(table, hRow, "Сотрудников в должности");
-	let rows = result.length;
-	for (let i = 0; i < rows; i++) {
-		let row = document.createElement('tr');
-		if (i % 2 == 0) {
-			$(row).css('background-color', '#2e2e2e');
+
+	$.ajax({
+		url: 'https://localhost:44356/content/getpositioncount',
+		method: 'GET',
+		success: function (count) {
+			currentCount = count;
+
+			let div = document.querySelector('#infoDisplay');
+			let table = document.createElement('table');
+			let caption = document.createElement('caption');
+			caption.innerText = 'Список должностей ТЧЭ-2 "Омск"';
+			table.appendChild(caption);
+			let hRow = document.createElement('tr');
+			GetThForTable(table, hRow, "№");
+			GetThForTable(table, hRow, "Наименование должности");
+			GetThForTable(table, hRow, "Сотрудников в должности");
+
+			let rows = result.length;
+			for (let i = 0; i < rows; i++) {
+				let row = document.createElement('tr');
+				if (i % 2 == 0) {
+					$(row).css('background-color', '#2e2e2e');
+				}
+				else {
+					$(row).css('background-color', '#3f3c3c');
+				}
+				$(row).attr('positionId', result[i].Id);
+				GetTdForTable(table, row, i + 1);
+				GetTdForTable(table, row, result[i].FullName);
+				GetTdForTable(table, row, result[i].Count);
+			}
+			div.appendChild(table);
+			SetControlPanels(count);
 		}
-		else {
-			$(row).css('background-color', '#3f3c3c');
-		}
-		$(row).attr('positionId', result[i].Id);
-		GetTdForTable(table, row, i + 1);
-		GetTdForTable(table, row, result[i].FullName);
-		GetTdForTable(table, row, result[i].Count);
-	}
-	div.appendChild(table);
-	$('#controlPanel').css('display', 'block');
+	});
 }
 
 function DisplayRoles(result) {
 	$('#infoDisplay table').remove();
-	let div = document.querySelector('#infoDisplay');
-	let table = document.createElement('table');
-	let caption = document.createElement('caption');
-	caption.innerText = 'Список ролей на сайте ТЧЭ-2 "Омск"';
-	table.appendChild(caption);
-	let hRow = document.createElement('tr');
-	GetThForTable(table, hRow, "№");
-	GetThForTable(table, hRow, "Наименование роли");
-	GetThForTable(table, hRow, "Сотрудников с данной ролью");
-	let rows = result.length;
-	for (let i = 0; i < rows; i++) {
-		let row = document.createElement('tr');
-		if (i % 2 == 0) {
-			$(row).css('background-color', '#2e2e2e');
+
+	$.ajax({
+		url: 'https://localhost:44356/content/getrolecount',
+		method: 'GET',
+		success: function (count) {
+			currentCount = count;
+
+			let div = document.querySelector('#infoDisplay');
+			let table = document.createElement('table');
+			let caption = document.createElement('caption');
+			caption.innerText = 'Список ролей на сайте ТЧЭ-2 "Омск"';
+			table.appendChild(caption);
+			let hRow = document.createElement('tr');
+			GetThForTable(table, hRow, "№");
+			GetThForTable(table, hRow, "Наименование роли");
+			GetThForTable(table, hRow, "Сотрудников с данной ролью");
+
+			let rows = result.length;
+			for (let i = 0; i < rows; i++) {
+				let row = document.createElement('tr');
+				if (i % 2 == 0) {
+					$(row).css('background-color', '#2e2e2e');
+				}
+				else {
+					$(row).css('background-color', '#3f3c3c');
+				}
+				$(row).attr('roleId', result[i].Id);
+				GetTdForTable(table, row, i + 1);
+				GetTdForTable(table, row, result[i].RoleName);
+				GetTdForTable(table, row, result[i].Count);
+			}
+			div.appendChild(table);
+			SetControlPanels(count);
 		}
-		else {
-			$(row).css('background-color', '#3f3c3c');
-		}
-		$(row).attr('roleId', result[i].Id);
-		GetTdForTable(table, row, i + 1);
-		GetTdForTable(table, row, result[i].RoleName);
-		GetTdForTable(table, row, result[i].Count);
-	}
-	div.appendChild(table);
-	$('#controlPanel').css('display', 'block');
+	});
 }
 
 function GetThForTable(table, row, value) {
@@ -239,4 +306,33 @@ function CheckNames(data) {
 	}
 
 	return false;
+}
+
+function SetControlPanels(count) {
+	$('#paginationMiddle p').remove();
+	if (count > 14) {
+		$('#paginationBlock').css('display', 'flex');
+		let div = document.querySelector('#paginationMiddle');
+		let p = document.createElement('p');
+		p.innerText = `Страница ${pageNumber + 1} из ${Math.round(count / 14 + 1)}`;
+		div.appendChild(p);
+
+		if (pageNumber < 1) {
+			$('#paginationLeftPart').css('pointerEvents', 'none').css('opacity', '0');
+		}
+		else {
+			$('#paginationLeftPart').css('pointerEvents', 'auto').css('opacity', '1');
+		}
+		if (pageNumber + 1 == Math.round(count / 14 + 1)) {
+			$('#paginationRightPart').css('pointerEvents', 'none').css('opacity', '0');
+		}
+		else {
+			$('#paginationRightPart').css('pointerEvents', 'auto').css('opacity', '1');
+		}
+	}
+	else {
+		$('#paginationBlock').css('display', 'none');
+	}
+
+	$('#controlPanel').css('display', 'block');
 }

@@ -113,13 +113,13 @@ footer {
     cursor: pointer;
 }
 
-    .railroads h2, .units h2 {
-        color: #ef980d;
-    }
+.railroads h2, .units h2 {
+    color: #ef980d;
+}
 
-    .railroads p:hover, .industries li:hover, .units p:hover {
-        color: #ff006e;
-    }
+.railroads p:hover, .industries li:hover, .units p:hover {
+    color: #ff006e;
+}
 
 ul.industries li {
     display: inline;
@@ -147,12 +147,12 @@ ul.industries li {
     width: 100px;
 }
 
-    .signIn:hover, #goOver:hover {
-        opacity: 1;
-        color: #ffaf00;
-        box-shadow: 3px 3px #ffaf00, 0em 0 0.2em #e1d865;
-        border-radius: 5px;
-    }
+.signIn:hover, #goOver:hover {
+    opacity: 1;
+    color: #ffaf00;
+    box-shadow: 3px 3px #ffaf00, 0em 0 0.2em #e1d865;
+    border-radius: 5px;
+}
 
 hr {
     border: none;

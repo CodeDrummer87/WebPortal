@@ -140,3 +140,32 @@ table td {
     height: 20px;
     font-size: 0.9rem;
 }
+
+#paginationBlock {
+    width: 80%;
+    margin: 2px auto;
+    padding: 0;
+    display: none;
+    flex-direction: row;
+    align-content: flex-start;
+}
+
+#paginationMiddle {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    height: 33px;
+    align-content: center;
+    justify-content: center;
+}
+
+#pageLeft,
+#pageRight {
+    width: 30%;
+    cursor: pointer;
+    transform: scale(1, -1);
+}
+
+#pageLeft {
+    transform: scale(-1, 1);
+}

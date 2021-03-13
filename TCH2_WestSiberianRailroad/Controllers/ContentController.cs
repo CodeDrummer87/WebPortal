@@ -27,22 +27,24 @@ namespace TCH2_WestSiberianRailroad.Controllers
         }
 
         [HttpGet]
-        public string GetEmployees()
+        public string GetEmployees(int page)
         {
-            var result = db.Users.Join(db.Positions, u => u.PositionId, p => p.Id, (u, p) => new
-            { 
+            var employeesList = db.Users.Join(db.Positions, u => u.PositionId, p => p.Id, (u, p) => new
+            {
                 u.Id,
                 u.FirstName,
                 u.LastName,
                 u.MiddleName,
                 p.FullName,
                 u.Email
-            });
-            return JsonConvert.SerializeObject(result);
+            }).OrderBy(e => e.LastName)
+            .Skip(page * 14).Take(14);
+
+            return JsonConvert.SerializeObject(employeesList);
         }
 
         [HttpGet]
-        public string GetPositions()
+        public string GetPositions(int page)
         {
             var result = db.Positions.GroupJoin(db.Users.GroupBy(u => u.PositionId).Select(g => new
             {
@@ -57,13 +59,13 @@ namespace TCH2_WestSiberianRailroad.Controllers
                     Id = position.p.Id,
                     FullName = position.p.FullName,
                     Count = user.Count
-                }).ToList();
+                }).Skip(page * 14).Take(14).ToList();
 
             return JsonConvert.SerializeObject(result);
         }
 
         [HttpGet]
-        public string GetRoles()
+        public string GetRoles(int page)
         {
             var result = db.Roles.GroupJoin(db.Users.GroupBy(u => u.RoleId).Select(g => new
             {
@@ -78,7 +80,7 @@ namespace TCH2_WestSiberianRailroad.Controllers
                     Id = role.r.Id,
                     RoleName = role.r.Name,
                     Count = user.Count
-                }).ToList();
+                }).Skip(page * 14).Take(14).ToList();
 
             return JsonConvert.SerializeObject(result);
         }
@@ -100,6 +102,24 @@ namespace TCH2_WestSiberianRailroad.Controllers
             }
 
             return false;
+        }
+
+        [HttpGet]
+        public int GetEmployeeCount()
+        {
+            return db.Users.Count();
+        }
+
+        [HttpGet]
+        public int GetPositionCount()
+        {
+            return db.Positions.Count();
+        }
+
+        [HttpGet]
+        public int GetRoleCount()
+        {
+            return db.Roles.Count();
         }
 
         private User GetCurrentUser()
