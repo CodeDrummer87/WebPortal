@@ -7,6 +7,7 @@ using RailroadPortalClassLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -78,6 +79,8 @@ namespace TCH2_WestSiberianRailroad.Controllers
                     PositionId = model?.PositionId,
                     RoleId = model?.RoleId
                 };
+
+                await SendEmail(newUser.Email, newUser.FirstName);
 
                 await db.Users.AddAsync(newUser);
                 await db.SaveChangesAsync();
@@ -151,6 +154,40 @@ namespace TCH2_WestSiberianRailroad.Controllers
             }
 
             return salt;
+        }
+
+        private async Task SendEmail(string email, string name)
+        {
+            await Task.Run(() => 
+            {
+                SmtpClient client = new SmtpClient("smtp.mail.ru");
+
+                client.UseDefaultCredentials = true;
+                client.EnableSsl = true;
+
+                var appEmailAccount = db.AppEmailAccounts.FirstOrDefault(e => e.IsActual == 1);
+                client.Credentials = new System.Net.NetworkCredential(appEmailAccount.Email, appEmailAccount.Password);
+
+                MailAddress from = new MailAddress("tch2.westsibrailroad@mail.ru", "Локомотивное депо ТЧ-2 Омск, ЗСЖД");
+                MailAddress to = new MailAddress(email, name);
+                MailMessage message = new MailMessage(from, to);
+
+                MailAddress reply = new MailAddress(email);
+                message.ReplyToList.Add(reply);
+
+                message.Subject = "Подтверждение почты для регистрации на железнодорожном веб-портале";
+                message.SubjectEncoding = System.Text.Encoding.UTF8;
+
+                //--------------------------------------------------------------------------------------
+                string urlCallback = "https://localhost:44356/content/confirmedAccount?email=" + email;
+                message.Body = $"<p>Здравствуйте, {name}. Для завершения регистрации перейдите по ссылке: <a href=\""
+                                                           + urlCallback + "\">Активировать аккаунт</a>";
+                //--------------------------------------------------------------------------------------
+                message.BodyEncoding = System.Text.Encoding.UTF8;
+                message.IsBodyHtml = true;
+
+                client.Send(message);
+            });
         }
     }
 }

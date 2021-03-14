@@ -164,6 +164,7 @@ function DisplayEmployees(result) {
 			GetThForTable(table, hRow, "Отчество");
 			GetThForTable(table, hRow, "Должность");
 			GetThForTable(table, hRow, "Электронная почта");
+			GetThForTable(table, hRow, "Подтв.");
 
 			let rows = result.length;
 
@@ -181,6 +182,8 @@ function DisplayEmployees(result) {
 				GetTdForTable(table, row, result[i].MiddleName);
 				GetTdForTable(table, row, result[i].FullName);
 				GetTdForTable(table, row, result[i].Email);
+				let confirmedEmail = result[i].ConfirmedEmail == 1 ? 'Да' : 'Нет';
+				GetTdForTable(table, row, confirmedEmail);
 			}
 			div.appendChild(table);
 			SetControlPanels(count);

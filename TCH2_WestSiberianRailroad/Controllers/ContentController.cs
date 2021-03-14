@@ -27,6 +27,25 @@ namespace TCH2_WestSiberianRailroad.Controllers
                 RedirectToAction("Index", "Start") : (IActionResult)View(GetCurrentUser());
         }
 
+        [AllowAnonymous]
+        public IActionResult ConfirmedAccount(string email)
+        {
+            var user = db.Users.FirstOrDefault(u => u.Email == email);
+            if (user != null)
+            {
+                user.ConfirmedEmail = 1;
+                db.SaveChangesAsync();
+            }
+            return user == null ?
+                RedirectToAction("Index", "Start") : (IActionResult)View(user);
+        }
+
+        [AllowAnonymous]
+        public IActionResult UnconfirmedAccount()
+        {
+            return View();
+        }
+
         [HttpGet]
         public string GetEmployees(int page)
         {
@@ -37,7 +56,8 @@ namespace TCH2_WestSiberianRailroad.Controllers
                 u.LastName,
                 u.MiddleName,
                 p.FullName,
-                u.Email
+                u.Email,
+                u.ConfirmedEmail
             }).OrderBy(e => e.LastName)
             .Skip(page * 14).Take(14);
 
