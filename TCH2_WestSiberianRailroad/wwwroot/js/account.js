@@ -14,18 +14,22 @@ $(document).ready(function () {
 		pageNumber = 0;
 		currentEntities = 'positions';
 		GetPositions();
+		DisplayMessage("Список текущих должностей в ТЧЭ-2 'Омск' загружен", true);
 	});
 
 	$('#employees').click(function () {
 		pageNumber = 0;
 		currentEntities = 'employees';
 		GetEmployees();
+		DisplayMessage("Список сотрудников ТЧЭ-2 'Омск' загружен", true);
+
 	});
 
 	$('#roles').click(function () {
 		pageNumber = 0;
 		currentEntities = 'roles';
 		GetRoles();
+		DisplayMessage("Список ролей для сайта ТЧЭ-2 'Омск' загружен", true);
 	});
 
 	$('.paginationPart').on('mouseover', 'img', function () {
@@ -50,6 +54,17 @@ $(document).ready(function () {
 			case 'employees': GetEmployees(); break;
 			case 'roles': GetRoles(); break;
 		}
+	});
+
+	$('#logout').click(function () {
+		$.ajax({
+			url: 'https://localhost:44356/account/logout',
+			method: 'GET',
+			success: function (address) {
+				window.location.href = address;
+				console.log("Не забудь сессию завершить");
+			}
+		});
 	});
 });
 
@@ -78,7 +93,6 @@ function GetEmployees() {
 		success: function (response) {
 			let result = JSON.parse(response);
 			DisplayEmployees(result);
-			DisplayMessage("Список сотрудников ТЧЭ-2 'Омск' загружен", true);
 		},
 		error: function () {
 			DisplayMessage("Ошибка выполнения запроса", false);
@@ -93,7 +107,6 @@ function GetPositions() {
 		success: function (response) {
 			let result = JSON.parse(response);
 			DisplayPositions(result);
-			DisplayMessage("Список текущих должностей в ТЧЭ-2 'Омск' загружен", true);
 		},
 		error: function () {
 			DisplayMessage("Ошибка выполнения запроса", false);
@@ -108,7 +121,6 @@ function GetRoles() {
 		success: function (response) {
 			let result = JSON.parse(response);
 			DisplayRoles(result);
-			DisplayMessage("Список ролей для сайта ТЧЭ-2 'Омск' загружен", true);
 		},
 		error: function () {
 			DisplayMessage("Ошибка выполнения запроса", false);

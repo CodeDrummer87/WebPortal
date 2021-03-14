@@ -11,6 +11,33 @@
 
 #mainHeader {
     grid-area: mH;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.statusBlock {
+    width: 20%;
+    padding: 5px;
+}
+
+.fullNameBlock {
+    width: 65%;
+    text-align: left;
+}
+
+.logoutBlock {
+    padding: 0 5px;
+}
+
+#logout:hover {
+    background-color: #ff6a00;
+}
+
+#logout:active {
+    background-color: #3f3c3c;
+    color: #fbe56c;
 }
 
 #mainNav {
@@ -28,13 +55,10 @@
 
 #mainMessages {
     grid-area: mM;
-}
-
-#mainHeader, #mainMessages {
     display: flex;
-    flex-direction: column;
-    align-content: center;
+    flex-direction: row;
     justify-content: center;
+    align-items: center;
 }
 
 .pageBlock {

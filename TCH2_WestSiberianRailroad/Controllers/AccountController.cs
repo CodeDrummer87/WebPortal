@@ -87,6 +87,19 @@ namespace TCH2_WestSiberianRailroad.Controllers
             else return String.Empty;
         }
 
+        [HttpGet]
+        public async Task<string> Logout()
+        {
+            string sessionId = contextAccessor.HttpContext.Request.Cookies["SessionId"];
+            SessionModel session = db.Sessions.FirstOrDefault(s => s.SessionId == sessionId);
+            session.Expired = DateTime.Now;
+            await db.SaveChangesAsync();
+
+            await contextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            contextAccessor.HttpContext.Response.Cookies.Delete("SessionId");
+            return "/Start/Index";
+        }
+
         private string GetHashImage(string pswrd, byte[] salt)
         {
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(

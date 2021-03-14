@@ -8,7 +8,13 @@
 
 <div class="main">
     <div class="pageBlock" id="mainHeader">
-        <h3>Личный кабинет системного администратора: <span id="currentUserFullName">@Model.LastName @Model.FirstName @Model.MiddleName</span></h3>
+        <div class="statusBlock">[Статус]</div>
+        <div class="fullNameBlock">
+            <h3>Личный кабинет системного администратора: <span id="currentUserFullName">@Model.LastName @Model.FirstName @Model.MiddleName</span></h3>
+        </div>
+        <div class="logoutBlock">
+            <button id="logout" title="Выйти из системы">Выход</button>
+        </div>
     </div>
     <div class="pageBlock" id="mainNav">
         <div class="headerMainNav">
@@ -17,6 +23,16 @@
         <button class="mainNavButton" id="employees">Сотрудники</button>
         <button class="mainNavButton" id="positions">Должности</button>
         <button class="mainNavButton" id="roles">Роли</button>
+        <div class="headerMainNav">
+            <h3>Архив</h3>
+        </div>
+        <button class="mainNavButton" id="archEmployees">Сотрудники</button>
+        <button class="mainNavButton" id="archPositions">Должности</button>
+        <button class="mainNavButton" id="archRoles">Роли</button>
+        <div class="headerMainNav">
+            <h3>Настройки</h3>
+        </div>
+        <button class="mainNavButton" id="siteEmail">Почта сайта</button>
     </div>
     <div class="pageBlock" id="mainArticle">
         <div id="infoDisplay"></div>
