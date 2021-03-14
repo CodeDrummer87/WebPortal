@@ -17,6 +17,7 @@ $(document).ready(function () {
 				GetRolesForSelect();
 				break;
 			case 'roles': DisplayMessage('Будет добавлена новая роль', true); break;
+			case 'siteEmail': DisplayMessage('Актуальный почтовый аккаунт для сайта ТЧЭ-2 \"Омск\" будет изменён', true); break;
 			default: DisplayMessage('Кнопка нажата, но контекст не выбран', false);
 		}
 	});
@@ -32,6 +33,13 @@ $(document).ready(function () {
 
 	$('#cancelCreatingNewAccount').click(function () {
 		DisplayModal('.pop-up-createNewEmployee', false);
+	});
+
+	$('#siteEmail').click(function () {
+		pageNumber = 0;
+		currentEntities = 'siteEmail';
+		GetAppEmailAccounts();
+		DisplayMessage("Данные актуального почтового аккаунта сайта ТЧЭ-2 \"Омск\" загружены", true);
 	});
 });
 
@@ -129,6 +137,60 @@ function CreateNewAccount() {
 		},
 		error: function () {
 			DisplayMessage('Ошибка запроса создания нового аккаунта', false);
+		}
+	});
+}
+
+function GetAppEmailAccounts() {
+	$.ajax({
+		url: 'https://localhost:44356/content/GetAppEmailAccount?page=' + pageNumber,
+		method: 'GET',
+		success: function (response) {
+			let result = JSON.parse(response);
+			DisplayAppEmailAccounts(result);
+		},
+		error: function () {
+			DisplayMessage("Ошибка загрузки данных актуального почтового аккаунта сайта ТЧЭ-2 \"Омск\"", false);
+		}
+	});
+}
+
+function DisplayAppEmailAccounts(result) {
+	$('#infoDisplay table').remove();
+
+	$.ajax({
+		url: 'https://localhost:44356/content/getemailcount',
+		method: 'GET',
+		success: function (count) {
+			currentCount = count;
+
+			let div = document.querySelector('#infoDisplay');
+			let table = document.createElement('table');
+			let caption = document.createElement('caption');
+			caption.innerText = 'Список почтовых аккаунтов сайта ТЧЭ-2 "Омск"';
+			table.appendChild(caption);
+			let hRow = document.createElement('tr');
+			GetThForTable(table, hRow, "№");
+			GetThForTable(table, hRow, "Почтовый адрес");
+			GetThForTable(table, hRow, "Действующий почтовый адрес");
+
+			let rows = result.length;
+			for (let i = 0; i < rows; i++) {
+				let row = document.createElement('tr');
+				if (i % 2 == 0) {
+					$(row).css('background-color', '#2e2e2e');
+				}
+				else {
+					$(row).css('background-color', '#3f3c3c');
+				}
+				$(row).attr('roleId', result[i].Id);
+				GetTdForTable(table, row, i + 1);
+				GetTdForTable(table, row, result[i].Email);
+				let isActual = result[i].IsActual == 1 ? 'Да' : 'Нет';
+				GetTdForTable(table, row, isActual);
+			}
+			div.appendChild(table);
+			SetControlPanels(count);
 		}
 	});
 }

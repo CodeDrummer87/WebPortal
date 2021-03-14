@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RailroadPortalClassLibrary;
 using System.Linq;
+using System.Threading.Tasks;
 using TCH2_WestSiberianRailroad.Models;
 
 namespace TCH2_WestSiberianRailroad.Controllers
@@ -120,6 +121,24 @@ namespace TCH2_WestSiberianRailroad.Controllers
         public int GetRoleCount()
         {
             return db.Roles.Count();
+        }
+
+        [HttpGet]
+        public int GetEmailCount()
+        {
+            return db.AppEmailAccounts.Count();
+        }
+
+        [HttpGet]
+        public string GetAppEmailAccount(int page)
+        {
+            var result = db.AppEmailAccounts.Select(e => new 
+            {
+                e.Id,
+                e.Email,
+                e.IsActual
+            }).Skip(page * 14).Take(14);
+            return JsonConvert.SerializeObject(result);
         }
 
         private User GetCurrentUser()

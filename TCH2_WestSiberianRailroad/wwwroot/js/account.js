@@ -348,3 +348,4 @@ function SetControlPanels(count) {
 
 	$('#controlPanel').css('display', 'block');
 }
+
