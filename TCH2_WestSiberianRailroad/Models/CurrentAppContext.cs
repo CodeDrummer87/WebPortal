@@ -10,6 +10,7 @@ namespace TCH2_WestSiberianRailroad.Models
         public DbSet<User> Users { get; set; }
         public DbSet<SessionModel> Sessions { get; set; }
         public DbSet<AppEmailAccount> AppEmailAccounts { get; set; }
+        public DbSet<EmailConfirmModel> EmailConfirmModels { get; set; }
 
         public CurrentAppContext(DbContextOptions<CurrentAppContext> options) : base(options)
         { }

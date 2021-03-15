@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ using TCH2_WestSiberianRailroad.Models;
 
 namespace TCH2_WestSiberianRailroad.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private CurrentAppContext db;
@@ -26,6 +28,7 @@ namespace TCH2_WestSiberianRailroad.Controllers
             contextAccessor = httpContext;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<string> SignIn([FromBody] SignInModel model)
         {
@@ -35,6 +38,11 @@ namespace TCH2_WestSiberianRailroad.Controllers
             {
                 await Authenticate(user.Email);
                 await RegisterSession(user.Id);
+                if (user.ConfirmedEmail == 0)
+                {
+                    await SendEmail(user);
+                    return "/Account/UnconfirmedAccount";
+                }
 
                 return "/Content/Admin";
             }
@@ -80,8 +88,6 @@ namespace TCH2_WestSiberianRailroad.Controllers
                     RoleId = model?.RoleId
                 };
 
-                await SendEmail(newUser.Email, newUser.FirstName);
-
                 await db.Users.AddAsync(newUser);
                 await db.SaveChangesAsync();
 
@@ -101,6 +107,30 @@ namespace TCH2_WestSiberianRailroad.Controllers
             await contextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             contextAccessor.HttpContext.Response.Cookies.Delete("SessionId");
             return "/Start/Index";
+        }
+
+        [AllowAnonymous]
+        public IActionResult ConfirmedAccount(string hashForCheck)
+        {
+            EmailConfirmModel confirmModel = db.EmailConfirmModels.FirstOrDefault(m => m.HashForCheck == hashForCheck);
+            if (confirmModel != null)
+            { 
+                User user = db.Users.FirstOrDefault(u => u.Id == confirmModel.UserId);
+
+                user.ConfirmedEmail = 1;
+                db.EmailConfirmModels.Remove(confirmModel);
+                db.SaveChangesAsync();
+
+                //.:: Temporary code -> set redirect by roles
+                return user == null ?
+                RedirectToAction("Index", "Start") : (IActionResult)View(user);
+            }
+            return RedirectToAction("Index", "Start");
+        }
+
+        public IActionResult UnconfirmedAccount()
+        {
+            return View();
         }
 
         private string GetHashImage(string pswrd, byte[] salt)
@@ -156,7 +186,7 @@ namespace TCH2_WestSiberianRailroad.Controllers
             return salt;
         }
 
-        private async Task SendEmail(string email, string name)
+        private async Task SendEmail(User user)
         {
             await Task.Run(() => 
             {
@@ -169,20 +199,29 @@ namespace TCH2_WestSiberianRailroad.Controllers
                 client.Credentials = new System.Net.NetworkCredential(appEmailAccount.Email, appEmailAccount.Password);
 
                 MailAddress from = new MailAddress("tch2.westsibrailroad@mail.ru", "Локомотивное депо ТЧ-2 Омск, ЗСЖД");
-                MailAddress to = new MailAddress(email, name);
+                MailAddress to = new MailAddress(user.Email, user.FirstName);
                 MailMessage message = new MailMessage(from, to);
 
-                MailAddress reply = new MailAddress(email);
+                MailAddress reply = new MailAddress(user.Email);
                 message.ReplyToList.Add(reply);
 
                 message.Subject = "Подтверждение почты для регистрации на железнодорожном веб-портале";
                 message.SubjectEncoding = System.Text.Encoding.UTF8;
 
-                //--------------------------------------------------------------------------------------
-                string urlCallback = "https://localhost:44356/content/confirmedAccount?email=" + email;
-                message.Body = $"<p>Здравствуйте, {name}. Для завершения регистрации перейдите по ссылке: <a href=\""
-                                                           + urlCallback + "\">Активировать аккаунт</a>";
-                //--------------------------------------------------------------------------------------
+                string guid = Guid.NewGuid().ToString();
+                string hashForCheck = GetHashImage(guid, user.Salt);
+
+                db.EmailConfirmModels.AddAsync(new EmailConfirmModel 
+                {
+                    UserId = user.Id,
+                    HashForCheck = hashForCheck
+                });
+                db.SaveChangesAsync();
+
+                string urlCallback = "https://localhost:44356/account/confirmedAccount?hashForCheck=" + hashForCheck;
+                message.Body = $"<p>Здравствуйте, {user.FirstName}. Для завершения регистрации перейдите по <a href=\""
+                                                           + urlCallback + "\">этой ссылке</a>";
+
                 message.BodyEncoding = System.Text.Encoding.UTF8;
                 message.IsBodyHtml = true;
 

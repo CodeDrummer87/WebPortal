@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RailroadPortalClassLibrary;
 using System.Linq;
-using System.Threading.Tasks;
 using TCH2_WestSiberianRailroad.Models;
 
 namespace TCH2_WestSiberianRailroad.Controllers
@@ -25,25 +24,6 @@ namespace TCH2_WestSiberianRailroad.Controllers
         {
             return GetCurrentUser() == null ?
                 RedirectToAction("Index", "Start") : (IActionResult)View(GetCurrentUser());
-        }
-
-        [AllowAnonymous]
-        public IActionResult ConfirmedAccount(string email)
-        {
-            var user = db.Users.FirstOrDefault(u => u.Email == email);
-            if (user != null)
-            {
-                user.ConfirmedEmail = 1;
-                db.SaveChangesAsync();
-            }
-            return user == null ?
-                RedirectToAction("Index", "Start") : (IActionResult)View(user);
-        }
-
-        [AllowAnonymous]
-        public IActionResult UnconfirmedAccount()
-        {
-            return View();
         }
 
         [HttpGet]
@@ -152,7 +132,7 @@ namespace TCH2_WestSiberianRailroad.Controllers
         [HttpGet]
         public string GetAppEmailAccount(int page)
         {
-            var result = db.AppEmailAccounts.Select(e => new 
+            var result = db.AppEmailAccounts.Select(e => new
             {
                 e.Id,
                 e.Email,
