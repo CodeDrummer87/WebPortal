@@ -13,22 +13,21 @@ $(document).ready(function () {
 	$('#positions').click(function () {
 		pageNumber = 0;
 		currentEntities = 'positions';
-		GetPositions();
+		GetPositions(1);
 		DisplayMessage("Список текущих должностей в ТЧЭ-2 'Омск' загружен", true);
 	});
 
 	$('#employees').click(function () {
 		pageNumber = 0;
 		currentEntities = 'employees';
-		GetEmployees();
+		GetEmployees(1);
 		DisplayMessage("Список сотрудников ТЧЭ-2 'Омск' загружен", true);
-
 	});
 
 	$('#roles').click(function () {
 		pageNumber = 0;
 		currentEntities = 'roles';
-		GetRoles();
+		GetRoles(1);
 		DisplayMessage("Список ролей для сайта ТЧЭ-2 'Омск' загружен", true);
 	});
 
@@ -50,9 +49,12 @@ $(document).ready(function () {
 		}
 
 		switch (currentEntities) {
-			case 'positions': GetPositions(); break;
-			case 'employees': GetEmployees(); break;
-			case 'roles': GetRoles(); break;
+			case 'positions': GetPositions(1); break;
+			case 'archPositions': GetPositions(0); break;
+			case 'employees': GetEmployees(1); break;
+			case 'archEmployees': GetEmployees(0); break;
+			case 'roles': GetRoles(1); break;
+			case 'archRoles': GetRoles(0); break;
 		}
 	});
 
@@ -62,7 +64,6 @@ $(document).ready(function () {
 			method: 'GET',
 			success: function (address) {
 				window.location.href = address;
-				console.log("Не забудь сессию завершить");
 			}
 		});
 	});
@@ -86,13 +87,13 @@ function CheckForName() {
 	});
 }
 
-function GetEmployees() {
+function GetEmployees(isActual) {
 	$.ajax({
-		url: 'https://localhost:44356/content/getemployees?page=' + pageNumber,
+		url: 'https://localhost:44356/content/getemployees?page=' + pageNumber + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
 			let result = JSON.parse(response);
-			DisplayEmployees(result);
+			DisplayEmployees(result, isActual);
 		},
 		error: function () {
 			DisplayMessage("Ошибка выполнения запроса", false);
@@ -100,13 +101,13 @@ function GetEmployees() {
 	});
 }
 
-function GetPositions() {
+function GetPositions(isActual) {
 	$.ajax({
-		url: 'https://localhost:44356/content/getpositions?page=' + pageNumber,
+		url: 'https://localhost:44356/content/getpositions?page=' + pageNumber + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
 			let result = JSON.parse(response);
-			DisplayPositions(result);
+			DisplayPositions(result, isActual);
 		},
 		error: function () {
 			DisplayMessage("Ошибка выполнения запроса", false);
@@ -114,13 +115,13 @@ function GetPositions() {
 	});
 }
 
-function GetRoles() {
+function GetRoles(isActual) {
 	$.ajax({
-		url: 'https://localhost:44356/content/getroles?page=' + pageNumber,
+		url: 'https://localhost:44356/content/getroles?page=' + pageNumber + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
 			let result = JSON.parse(response);
-			DisplayRoles(result);
+			DisplayRoles(result, isActual);
 		},
 		error: function () {
 			DisplayMessage("Ошибка выполнения запроса", false);
@@ -144,11 +145,11 @@ function DisplayMessage(message, success) {
 	timeoutHandle = setTimeout(function () { $('#mainMessages').text(''); }, 3500);
 }
 
-function DisplayEmployees(result) {
+function DisplayEmployees(result, isActual) {
 	$('#infoDisplay table').remove();
 
 	$.ajax({
-		url: 'https://localhost:44356/content/getemployeecount',
+		url: 'https://localhost:44356/content/getemployeecount?isActual=' + isActual,
 		method: 'GET',
 		success: function (count) {
 			currentCount = count;
@@ -156,7 +157,7 @@ function DisplayEmployees(result) {
 			let div = document.querySelector('#infoDisplay');
 			let table = document.createElement('table');
 			let caption = document.createElement('caption');
-			caption.innerText = 'Список сотрудников ТЧЭ-2 "Омск"';
+			caption.innerText = isActual == 1 ? 'Список сотрудников ТЧЭ-2 "Омск"' : 'Архив сотрудников ТЧЭ-2 "Омск"';
 			table.appendChild(caption);
 			let hRow = document.createElement('tr');
 			GetThForTable(table, hRow, "Фамилия");
@@ -191,11 +192,11 @@ function DisplayEmployees(result) {
 	});
 }
 
-function DisplayPositions(result) {
+function DisplayPositions(result, isActual) {
 	$('#infoDisplay table').remove();
 
 	$.ajax({
-		url: 'https://localhost:44356/content/getpositioncount',
+		url: 'https://localhost:44356/content/getpositioncount?isActual=' +isActual,
 		method: 'GET',
 		success: function (count) {
 			currentCount = count;
@@ -203,7 +204,7 @@ function DisplayPositions(result) {
 			let div = document.querySelector('#infoDisplay');
 			let table = document.createElement('table');
 			let caption = document.createElement('caption');
-			caption.innerText = 'Список должностей ТЧЭ-2 "Омск"';
+			caption.innerText = isActual == 1 ? 'Список должностей ТЧЭ-2 "Омск"' : ' Архив должностей ТЧЭ-2 "Омск"';
 			table.appendChild(caption);
 			let hRow = document.createElement('tr');
 			GetThForTable(table, hRow, "№");
@@ -230,11 +231,11 @@ function DisplayPositions(result) {
 	});
 }
 
-function DisplayRoles(result) {
+function DisplayRoles(result, isActual) {
 	$('#infoDisplay table').remove();
 
 	$.ajax({
-		url: 'https://localhost:44356/content/getrolecount',
+		url: 'https://localhost:44356/content/getrolecount?isActual=' + isActual,
 		method: 'GET',
 		success: function (count) {
 			currentCount = count;
@@ -242,7 +243,7 @@ function DisplayRoles(result) {
 			let div = document.querySelector('#infoDisplay');
 			let table = document.createElement('table');
 			let caption = document.createElement('caption');
-			caption.innerText = 'Список ролей на сайте ТЧЭ-2 "Омск"';
+			caption.innerText = isActual == 1 ? 'Список ролей на сайте ТЧЭ-2 "Омск"' : 'Архив ролей на сайте ТЧЭ-2 "Омск"';
 			table.appendChild(caption);
 			let hRow = document.createElement('tr');
 			GetThForTable(table, hRow, "№");

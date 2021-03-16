@@ -35,6 +35,27 @@ $(document).ready(function () {
 		DisplayModal('.pop-up-createNewEmployee', false);
 	});
 
+	$('#archEmployees').click(function () {
+		pageNumber = 0;
+		currentEntities = 'archEmployees';
+		GetEmployees(0);
+		DisplayMessage("Архив сотрудников ТЧЭ-2 'Омск' загружен", true);
+	});
+
+	$('#archPositions').click(function () {
+		pageNumber = 0;
+		currentEntities = 'archPositions';
+		GetPositions(0);
+		DisplayMessage("Архив должностей ТЧЭ-2 'Омск' загружен", true);
+	});
+
+	$('#archRoles').click(function () {
+		pageNumber = 0;
+		currentEntities = 'archRoles';
+		GetRoles(0);
+		DisplayMessage("Архив ролей сайта ТЧЭ-2 'Омск' загружен", true);
+	});
+
 	$('#siteEmail').click(function () {
 		pageNumber = 0;
 		currentEntities = 'siteEmail';

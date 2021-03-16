@@ -15,5 +15,6 @@ namespace RailroadPortalClassLibrary
         public int? PositionId { get; set; }
         public int? RoleId { get; set; }
         public byte ConfirmedEmail { get; set; }
+        public byte IsActual { get; set; }
     }
 }

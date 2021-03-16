@@ -27,9 +27,9 @@ namespace TCH2_WestSiberianRailroad.Controllers
         }
 
         [HttpGet]
-        public string GetEmployees(int page)
+        public string GetEmployees(int page, byte isActual)
         {
-            var employeesList = db.Users.Join(db.Positions, u => u.PositionId, p => p.Id, (u, p) => new
+            var employeesList = db.Users.Where(i => i.IsActual == isActual).Join(db.Positions, u => u.PositionId, p => p.Id, (u, p) => new
             {
                 u.Id,
                 u.FirstName,
@@ -45,9 +45,9 @@ namespace TCH2_WestSiberianRailroad.Controllers
         }
 
         [HttpGet]
-        public string GetPositions(int page)
+        public string GetPositions(int page, byte isActual)
         {
-            var result = db.Positions.GroupJoin(db.Users.GroupBy(u => u.PositionId).Select(g => new
+            var result = db.Positions.Where(i => i.IsActual == isActual).GroupJoin(db.Users.GroupBy(u => u.PositionId).Select(g => new
             {
                 PositionId = g.Key,
                 Count = g.Count()
@@ -66,9 +66,9 @@ namespace TCH2_WestSiberianRailroad.Controllers
         }
 
         [HttpGet]
-        public string GetRoles(int page)
+        public string GetRoles(int page, byte isActual)
         {
-            var result = db.Roles.GroupJoin(db.Users.GroupBy(u => u.RoleId).Select(g => new
+            var result = db.Roles.Where(i => i.IsActual == isActual).GroupJoin(db.Users.GroupBy(u => u.RoleId).Select(g => new
             {
                 RoleId = g.Key,
                 Count = g.Count()
@@ -106,21 +106,21 @@ namespace TCH2_WestSiberianRailroad.Controllers
         }
 
         [HttpGet]
-        public int GetEmployeeCount()
+        public int GetEmployeeCount(byte isActual)
         {
-            return db.Users.Count();
+            return db.Users.Where(u => u.IsActual == isActual).Count();
         }
 
         [HttpGet]
-        public int GetPositionCount()
+        public int GetPositionCount(byte isActual)
         {
-            return db.Positions.Count();
+            return db.Positions.Where(p => p.IsActual == isActual).Count();
         }
 
         [HttpGet]
-        public int GetRoleCount()
+        public int GetRoleCount(byte isActual)
         {
-            return db.Roles.Count();
+            return db.Roles.Where(r => r.IsActual == isActual).Count();
         }
 
         [HttpGet]
