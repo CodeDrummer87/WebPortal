@@ -6,6 +6,7 @@ $(document).ready(function () {
 
 	CheckForName();
 
+
 	$('#pop-up-submitData').click(function () {
 		SaveCurrentUserData(); 
 	});
@@ -80,9 +81,6 @@ function CheckForName() {
 			else {
 				DisplayModal('.pop-up-nameSetting', false);
 			}
-		},
-		error: function () {
-			DisplayMessage('Не удалось установить связь с сервером', false);
 		}
 	});
 }
@@ -352,4 +350,3 @@ function SetControlPanels(count) {
 
 	$('#controlPanel').css('display', 'block');
 }
-

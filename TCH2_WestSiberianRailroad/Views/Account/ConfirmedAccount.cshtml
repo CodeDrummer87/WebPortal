@@ -2,10 +2,33 @@
 @model User
 
 @{
-    ViewData["Title"] = $"Личный кабинет";
+    ViewData["Title"] = $"Почта подтверждена";
 }
 
 
 <div class="main">
-    <h3>Почта подтверждена</h3>
+    <div class="pageBlock" id="mainArticle" style="border: none;">
+        <h3>Здравствуйте, @Model.FirstName @Model.MiddleName! Регистрация аккаунта прошла успешно для почты @Model.Email</h3>
+    </div>
+    <div class="pageBlock" id="mainMessages" style="border: none;">
+        <p id="countdownMessage" style="color: gold" ;></p>
+    </div>
 </div>
+
+<script>
+    let seconds = 5;
+
+    function ShowMessage(second) {
+        $('#countdownMessage').text(`Окно закроется через ${second} секунд`);
+    }
+
+    let timerId = setInterval(function () {
+        ShowMessage(seconds--);
+
+        if (seconds < 0) {
+            clearInterval(timerId);
+            window.close();
+        }
+
+    }, 1000);
+</script>

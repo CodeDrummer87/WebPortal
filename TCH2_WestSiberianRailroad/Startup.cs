@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using TCH2_WestSiberianRailroad.Models;
+using TCH2_WestSiberianRailroad.Modules.Implementation;
+using TCH2_WestSiberianRailroad.Modules.Interfaces;
 
 namespace TCH2_WestSiberianRailroad
 {
@@ -42,6 +44,7 @@ namespace TCH2_WestSiberianRailroad
 
             services.AddControllersWithViews();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IAccountActions, AccountActions>();
         }
 
         public void Configure(IApplicationBuilder app)

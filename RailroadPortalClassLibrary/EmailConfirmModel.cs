@@ -6,7 +6,7 @@ namespace RailroadPortalClassLibrary
     {
         [Key]
         public int Id { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public string HashForCheck { get; set; }
     }
 }

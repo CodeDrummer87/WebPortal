@@ -10,11 +10,11 @@ $(document).ready(function () {
 		switch (currentEntities) {
 			case 'positions': DisplayMessage('Добавление в систему новой должности', true);
 				break;
-			case 'employees': DisplayMessage('Будет добавлен новый сотрудник', true);
+			case 'employees': DisplayMessage('Создание аккаунта нового сотрудника', true);
 				DisplayModal('.pop-up-createNewEmployee', true);
 				$('#inpCreateEmail').focus();
-				GetPositionsForSelect();
-				GetRolesForSelect();
+				GetPositionsForSelect(1);
+				GetRolesForSelect(1);
 				break;
 			case 'roles': DisplayMessage('Будет добавлена новая роль', true); break;
 			case 'siteEmail': DisplayMessage('Актуальный почтовый аккаунт для сайта ТЧЭ-2 \"Омск\" будет изменён', true); break;
@@ -64,9 +64,9 @@ $(document).ready(function () {
 	});
 });
 
-function GetPositionsForSelect() {
+function GetPositionsForSelect(isActual) {
 	$.ajax({
-		url: 'https://localhost:44356/content/getpositions',
+		url: 'https://localhost:44356/content/getpositions?page=' + pageNumber + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
 			let result = JSON.parse(response);
@@ -89,9 +89,9 @@ function GetPositionsForSelect() {
 	});
 }
 
-function GetRolesForSelect() {
+function GetRolesForSelect(isActual) {
 	$.ajax({
-		url: 'https://localhost:44356/content/getroles',
+		url: 'https://localhost:44356/content/getroles?page=' + pageNumber + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
 			let result = JSON.parse(response);
@@ -147,7 +147,7 @@ function CreateNewAccount() {
 		data: JSON.stringify(employee),
 		success: function (email) {
 			if (email != '') {
-				GetEmployees();
+				GetEmployees(1);
 				DisplayMessage(`Зарегистрирован аккаунт для ${email}`, true);
 				DisplayModal('.pop-up-createNewEmployee', false);
 			}

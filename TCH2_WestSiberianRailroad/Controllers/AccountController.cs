@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using TCH2_WestSiberianRailroad.Models;
+using TCH2_WestSiberianRailroad.Modules.Interfaces;
 
 namespace TCH2_WestSiberianRailroad.Controllers
 {
@@ -21,11 +22,13 @@ namespace TCH2_WestSiberianRailroad.Controllers
     {
         private CurrentAppContext db;
         private readonly IHttpContextAccessor contextAccessor;
+        private IAccountActions account;
 
-        public AccountController(CurrentAppContext context, IHttpContextAccessor httpContext)
+        public AccountController(CurrentAppContext context, IHttpContextAccessor httpContext, IAccountActions _account)
         {
             db = context;
             contextAccessor = httpContext;
+            account = _account;
         }
 
         [AllowAnonymous]
@@ -44,7 +47,7 @@ namespace TCH2_WestSiberianRailroad.Controllers
                     return "/Account/UnconfirmedAccount";
                 }
 
-                return "/Content/Admin";
+                return account.GetUrlUserAccount(user.PositionId);
             }
 
             return null;
@@ -53,10 +56,8 @@ namespace TCH2_WestSiberianRailroad.Controllers
         [HttpPost]
         public async Task<string> SaveUserData([FromBody] UserFullName fullName)
         {
-            string sessionId = contextAccessor.HttpContext.Request.Cookies["SessionId"];
+            User user = account.GetCurrentUser();
 
-            int userId = db.Sessions.FirstOrDefault(s => s.SessionId == sessionId).UserId;
-            User user = db.Users.FirstOrDefault(u => u.Id == userId);
             if (user != null)
             {
                 user.FirstName = fullName.FirstName;
@@ -84,8 +85,9 @@ namespace TCH2_WestSiberianRailroad.Controllers
                     FirstName = model?.FirstName,
                     LastName = model?.LastName,
                     MiddleName = model?.MiddleName,
-                    PositionId = model?.PositionId,
-                    RoleId = model?.RoleId
+                    PositionId = model.PositionId,
+                    RoleId = model?.RoleId,
+                    IsActual = 1
                 };
 
                 await db.Users.AddAsync(newUser);
@@ -110,22 +112,37 @@ namespace TCH2_WestSiberianRailroad.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult ConfirmedAccount(string hashForCheck)
+        public async Task<IActionResult> ConfirmedAccount(string hashForCheck)
         {
-            EmailConfirmModel confirmModel = db.EmailConfirmModels.FirstOrDefault(m => m.HashForCheck == hashForCheck);
+            var model = db.EmailConfirmModels.Where(m => m.HashForCheck == hashForCheck).ToArray();
+            User user = db.Users.FirstOrDefault(u => u.Id == model[0].UserId);
+
+            await Task.Run(() => 
+            {
+                if (user != null)
+                {
+                    user.ConfirmedEmail = 1;
+                    db.EmailConfirmModels.Remove(model[0]);
+                    db.SaveChangesAsync();
+
+                    string pageName = account.GetViewUserAccount(user.PositionId);
+                    
+                }
+            });
+            return View(user);
+        }
+
+        [HttpGet]
+        public async void SendAgain()
+        {
+            User user = account.GetCurrentUser();
+            var confirmModel = db.EmailConfirmModels.FirstOrDefault(m => m.UserId == user.Id);
             if (confirmModel != null)
-            { 
-                User user = db.Users.FirstOrDefault(u => u.Id == confirmModel.UserId);
-
-                user.ConfirmedEmail = 1;
+            {
                 db.EmailConfirmModels.Remove(confirmModel);
-                db.SaveChangesAsync();
-
-                //.:: Temporary code -> set redirect by roles
-                return user == null ?
-                RedirectToAction("Index", "Start") : (IActionResult)View(user);
             }
-            return RedirectToAction("Index", "Start");
+            await db.SaveChangesAsync();
+            await SendEmail(user);
         }
 
         public IActionResult UnconfirmedAccount()
@@ -208,8 +225,7 @@ namespace TCH2_WestSiberianRailroad.Controllers
                 message.Subject = "Подтверждение почты для регистрации на железнодорожном веб-портале";
                 message.SubjectEncoding = System.Text.Encoding.UTF8;
 
-                string guid = Guid.NewGuid().ToString();
-                string hashForCheck = GetHashImage(guid, user.Salt);
+                string hashForCheck = Guid.NewGuid().ToString();
 
                 db.EmailConfirmModels.AddAsync(new EmailConfirmModel 
                 {
@@ -218,7 +234,7 @@ namespace TCH2_WestSiberianRailroad.Controllers
                 });
                 db.SaveChangesAsync();
 
-                string urlCallback = "https://localhost:44356/account/confirmedAccount?hashForCheck=" + hashForCheck;
+                string urlCallback = "https://localhost:44356/account/confirmedAccount?hashForCheck="+hashForCheck;
                 message.Body = $"<p>Здравствуйте, {user.FirstName}. Для завершения регистрации перейдите по <a href=\""
                                                            + urlCallback + "\">этой ссылке</a>";
 

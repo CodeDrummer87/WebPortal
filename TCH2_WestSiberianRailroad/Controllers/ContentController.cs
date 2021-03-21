@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using RailroadPortalClassLibrary;
 using System.Linq;
 using TCH2_WestSiberianRailroad.Models;
+using TCH2_WestSiberianRailroad.Modules.Interfaces;
 
 namespace TCH2_WestSiberianRailroad.Controllers
 {
@@ -12,18 +13,54 @@ namespace TCH2_WestSiberianRailroad.Controllers
     public class ContentController : Controller
     {
         private CurrentAppContext db;
-        private IHttpContextAccessor contextAccessor;
+        private IAccountActions account;
 
-        public ContentController(CurrentAppContext context, IHttpContextAccessor accessor)
+        public ContentController(CurrentAppContext context, IAccountActions _account)
         {
             db = context;
-            contextAccessor = accessor;
+            account = _account;
         }
 
         public IActionResult Admin()
         {
-            return GetCurrentUser() == null ?
-                RedirectToAction("Index", "Start") : (IActionResult)View(GetCurrentUser());
+            return account.GetCurrentUser() == null ?
+                RedirectToAction("Index", "Start") : (IActionResult)View(account.GetCurrentUser());
+        }
+
+        public IActionResult DriverAssistant()
+        {
+            return account.GetCurrentUser() == null ?
+                RedirectToAction("Index", "Start") : (IActionResult)View(account.GetCurrentUser());
+        }
+
+        public IActionResult Contractor()
+        {
+            return account.GetCurrentUser() == null ?
+                RedirectToAction("Index", "Start") : (IActionResult)View(account.GetCurrentUser());
+        }
+
+        public IActionResult Driver()
+        {
+            return account.GetCurrentUser() == null ?
+                RedirectToAction("Index", "Start") : (IActionResult)View(account.GetCurrentUser());
+        }
+
+        public IActionResult DriverInstructor()
+        {
+            return account.GetCurrentUser() == null ?
+                RedirectToAction("Index", "Start") : (IActionResult)View(account.GetCurrentUser());
+        }
+
+        public IActionResult Engineer()
+        {
+            return account.GetCurrentUser() == null ?
+                RedirectToAction("Index", "Start") : (IActionResult)View(account.GetCurrentUser());
+        }
+
+        public IActionResult HR()
+        {
+            return account.GetCurrentUser() == null ?
+                RedirectToAction("Index", "Start") : (IActionResult)View(account.GetCurrentUser());
         }
 
         [HttpGet]
@@ -89,17 +126,11 @@ namespace TCH2_WestSiberianRailroad.Controllers
         [HttpGet]
         public bool CheckForName()
         {
-            string sessionId = contextAccessor.HttpContext.Request.Cookies["SessionId"];
+            User user = account.GetCurrentUser();
 
-            if (sessionId != null)
+            if (user != null && user.FirstName != null)
             {
-                int userId = db.Sessions.FirstOrDefault(s => s.SessionId == sessionId).UserId;
-                User user = db.Users.FirstOrDefault(u => u.Id == userId);
-
-                if (user != null && user.FirstName != null)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
@@ -141,22 +172,15 @@ namespace TCH2_WestSiberianRailroad.Controllers
             return JsonConvert.SerializeObject(result);
         }
 
-        private User GetCurrentUser()
+        [HttpGet]
+        public bool CheckEmailStatus()
         {
-            string sessionId = contextAccessor.HttpContext.Request.Cookies["SessionId"];
-
-            if (sessionId != null)
+            User user = account.GetCurrentUser();
+            if (user.ConfirmedEmail == (byte)1)
             {
-                int userId = db.Sessions.FirstOrDefault(s => s.SessionId == sessionId).UserId;
-                User user = db.Users.FirstOrDefault(u => u.Id == userId);
-
-                if (user != null)
-                {
-                    return user;
-                }
+                return true;
             }
-
-            return null;
+            else return false;
         }
     }
 }

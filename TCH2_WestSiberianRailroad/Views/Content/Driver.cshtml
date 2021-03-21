@@ -1,0 +1,38 @@
+﻿@using RailroadPortalClassLibrary
+@model User
+
+@{
+    ViewData["Title"] = $"Личный кабинет";
+}
+
+
+<div class="main">
+    <div class="pageBlock" id="mainHeader">
+        <div class="statusBlock">[Статус]</div>
+        <div class="fullNameBlock">
+            <h3>Личный кабинет машиниста электровоза: <span id="currentUserFullName">@Model.LastName @Model.FirstName @Model.MiddleName</span></h3>
+        </div>
+        <div class="logoutBlock">
+            <button id="logout" title="Выйти из системы">Выход</button>
+        </div>
+    </div>
+    <div class="pageBlock" id="mainNav">
+
+    </div>
+    <div class="pageBlock" id="mainArticle">
+        <div id="infoDisplay"></div>
+        <div id="paginationBlock">
+            <div class="paginationPart" id="paginationLeftPart"><img src="~/images/arrow.png" id="pageLeft" title="Назад" /></div>
+            <div id="paginationMiddle"></div>
+            <div class="paginationPart" id="paginationRightPart"><img src="~/images/arrow.png" id="pageRight" title="Вперёд" /></div>
+        </div>
+        <div id="controlPanel">
+            <button id="addNewEntity">Добавить</button>
+            <button id="updateEntity">Изменить</button>
+            <button id="deleteEntity">Удалить</button>
+        </div>
+    </div>
+    <div class="pageBlock" id="mainMessages"></div>
+</div>
+
+<div class="nap"></div>
