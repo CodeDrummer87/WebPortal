@@ -1,14 +1,21 @@
-﻿$(document).ready(function () {
+﻿var clickSound = new Audio("/audio/selectClick.wav");
+var modifySound = new Audio("/audio/modifyClick.wav");
+var removeSound = new Audio("/audio/removeClick.wav");
+var recoverSound = new Audio("/audio/recoverClick.wav");
+
+$(document).ready(function () {
 
     $('#inpSignIn').focus();
 
     $(document).on('keypress', function (e) {
         if (e.which == 13) {
+            clickSound.play();
             SignIn();
         }
     });
 
     $('#signInButton').click(function () {
+        clickSound.play();
         SignIn();
     });
 

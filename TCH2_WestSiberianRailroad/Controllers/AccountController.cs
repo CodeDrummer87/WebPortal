@@ -43,6 +43,12 @@ namespace TCH2_WestSiberianRailroad.Controllers
                 await RegisterSession(user.Id);
                 if (user.ConfirmedEmail == 0)
                 {
+                    var confirmEmails = db.EmailConfirmModels.Where(m => m.UserId == user.Id).ToArray();
+                    if (confirmEmails != null)
+                    {
+                        db.EmailConfirmModels.RemoveRange(confirmEmails);
+                    }
+
                     await SendEmail(user);
                     return "/Account/UnconfirmedAccount";
                 }
@@ -111,38 +117,33 @@ namespace TCH2_WestSiberianRailroad.Controllers
             return "/Start/Index";
         }
 
+        [HttpGet]
+        public string CheckEmailStatus()
+        {
+            User user = account.GetCurrentUser();
+            if (user.ConfirmedEmail == 1)
+            {
+                return account.GetUrlUserAccount(user.PositionId);
+            }
+
+            return String.Empty;
+        }
+
         [AllowAnonymous]
-        public async Task<IActionResult> ConfirmedAccount(string hashForCheck)
+        public IActionResult ConfirmedAccount(string hashForCheck)
         {
             var model = db.EmailConfirmModels.Where(m => m.HashForCheck == hashForCheck).ToArray();
             User user = db.Users.FirstOrDefault(u => u.Id == model[0].UserId);
 
-            await Task.Run(() => 
+            if (user != null)
             {
-                if (user != null)
-                {
-                    user.ConfirmedEmail = 1;
-                    db.EmailConfirmModels.Remove(model[0]);
-                    db.SaveChangesAsync();
+                user.ConfirmedEmail = 1;
+                db.EmailConfirmModels.Remove(model[0]);
+                db.SaveChanges();
 
-                    string pageName = account.GetViewUserAccount(user.PositionId);
-                    
-                }
-            });
-            return View(user);
-        }
-
-        [HttpGet]
-        public async void SendAgain()
-        {
-            User user = account.GetCurrentUser();
-            var confirmModel = db.EmailConfirmModels.FirstOrDefault(m => m.UserId == user.Id);
-            if (confirmModel != null)
-            {
-                db.EmailConfirmModels.Remove(confirmModel);
+                string pageName = account.GetViewUserAccount(user.PositionId);
             }
-            await db.SaveChangesAsync();
-            await SendEmail(user);
+            return View(user);
         }
 
         public IActionResult UnconfirmedAccount()

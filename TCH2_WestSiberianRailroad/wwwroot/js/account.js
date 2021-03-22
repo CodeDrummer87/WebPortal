@@ -6,12 +6,13 @@ $(document).ready(function () {
 
 	CheckForName();
 
-
 	$('#pop-up-submitData').click(function () {
+		modifySound.play();
 		SaveCurrentUserData(); 
 	});
 
 	$('#positions').click(function () {
+		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'positions';
 		GetPositions(1);
@@ -19,6 +20,7 @@ $(document).ready(function () {
 	});
 
 	$('#employees').click(function () {
+		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'employees';
 		GetEmployees(1);
@@ -26,6 +28,7 @@ $(document).ready(function () {
 	});
 
 	$('#roles').click(function () {
+		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'roles';
 		GetRoles(1);
@@ -37,9 +40,10 @@ $(document).ready(function () {
 	}).on('mouseout', 'img', function () {
 		$(this).attr('src', '/images/arrow.png');
 	}).on('click', 'img', function () {
+		clickSound.play();
 		$(this).attr('src', '/images/arrow_active.png');
 		if ($(this).attr('id') == 'pageRight') {
-			if (pageNumber < Math.round(currentCount / 14)) {
+			if (pageNumber < Math.floor(currentCount / 14)) {
 				++pageNumber;
 			}
 		}
@@ -60,6 +64,7 @@ $(document).ready(function () {
 	});
 
 	$('#logout').click(function () {
+		clickSound.play();
 		$.ajax({
 			url: 'https://localhost:44356/account/logout',
 			method: 'GET',
@@ -328,7 +333,7 @@ function SetControlPanels(count) {
 		$('#paginationBlock').css('display', 'flex');
 		let div = document.querySelector('#paginationMiddle');
 		let p = document.createElement('p');
-		p.innerText = `Страница ${pageNumber + 1} из ${Math.round(count / 14 + 1)}`;
+		p.innerText = `Страница ${pageNumber + 1} из ${Math.floor(count % 14) == 0 ? Math.floor(count / 14) : Math.floor(count / 14) + 1}`;
 		div.appendChild(p);
 
 		if (pageNumber < 1) {
@@ -337,7 +342,7 @@ function SetControlPanels(count) {
 		else {
 			$('#paginationLeftPart').css('pointerEvents', 'auto').css('opacity', '1');
 		}
-		if (pageNumber + 1 == Math.round(count / 14 + 1)) {
+		if (pageNumber + 1 == (Math.floor(count % 14) == 0 ? Math.floor(count / 14) : Math.floor(count / 14) + 1)) {
 			$('#paginationRightPart').css('pointerEvents', 'none').css('opacity', '0');
 		}
 		else {

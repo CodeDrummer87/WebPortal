@@ -4,9 +4,6 @@
 
 
 <div class="main">
-    <div class="pageBlock" id="mainHeader">
-        <button style="width: 250px; margin-left: 10px;" id="sendConfirmAgain">Отправить письмо ещё раз</button>
-    </div>
     <div class="pageBlock" id="mainArticle" style="border: none;">
         <h3 style="color: gold;">Аккаунт не подтверждён. На Вашу почту отправлено письмо с активацией аккаунта.</h3>
     </div>
@@ -15,28 +12,14 @@
 <script>
     var handler = setInterval(CheckForEmailConfirm, 10000);
 
-    $('#sendConfirmAgain').click(function () {
-        $.ajax({
-            url: 'https://localhost:44356/account/sendAgain',
-            method: 'GET',
-            success: function () {
-                DisplayMessage('На Вашу почту повторно отправлено письмо', true);
-            },
-            error: function () {
-                DisplayMessage('Ошибка запроса', false);
-            }
-        });
-    });
-
     function CheckForEmailConfirm() {
-        console.log('.:: Функция проверяет');
         $.ajax({
-            url: 'https://localhost:44356/content/checkemailstatus',
+            url: 'https://localhost:44356/account/checkemailstatus',
             method: 'GET',
-            success: function (response) {
-                if (response == true) {
+            success: function (address) {
+                if (address != '') {
                     clearInterval(handler);
-                    window.location.href = '/content/driverassistant';
+                    window.location.href = address;
                 }
             }
         });

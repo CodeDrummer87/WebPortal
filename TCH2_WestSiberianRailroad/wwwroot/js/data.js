@@ -2,10 +2,12 @@
 
 //.:: Variable to store the current context :::
 var currentEntities = 'none';
+var selectedEmployeeRow = 'undefined';
 
 $(document).ready(function () {
 
 	$('#addNewEntity').click(function () {
+		clickSound.play();
 		ClearFieldsForCreatingNewEmployee();
 		switch (currentEntities) {
 			case 'positions': DisplayMessage('Добавление в систему новой должности', true);
@@ -22,20 +24,59 @@ $(document).ready(function () {
 		}
 	});
 
+	$('#deleteEntity').click(function () {
+		clickSound.play();
+		switch (currentEntities) {
+			case 'positions': DisplayMessage('Должность будет перенесена в архив', true);
+				break;
+			case 'employees':
+				if (selectedEmployeeRow != 'undefined') {
+					DisplayMessage('Аккаунт сотрудника будет перенесён в архив', true);
+					DisplayModal('.pop-up-confirmEmployeeRemove', true);
+				}
+				else {
+					DisplayMessage('Не выбран сотрудник', false);
+				}
+				break;
+			case 'roles': DisplayMessage('Выбранная роль будет перенесена в архив', true); break;
+			case 'siteEmail': DisplayMessage('Актуальный почтовый аккаунт для сайта ТЧЭ-2 \"Омск\" будет перенесён в архив', true); break;
+			default: DisplayMessage('Кнопка нажата, но контекст не выбран', false);
+		}
+	});
+
 	$('#executeCreatingNewAccount').click(function () {
+		modifySound.play();
 		CreateNewAccount();
 	});
 
 	$('#clearCreatingNewAccount').click(function () {
+		clickSound.play();
 		ClearFieldsForCreatingNewEmployee();
 		$('#inpCreateEmail').focus();
 	});
 
 	$('#cancelCreatingNewAccount').click(function () {
+		clickSound.play();
 		DisplayModal('.pop-up-createNewEmployee', false);
 	});
 
+	$('#employeeRemoveConfirmButton').click(function () {
+		removeSound.play();
+		DisplayModal('.pop-up-confirmEmployeeRemove', false);
+		if (selectedEmployeeRow != 'undefined') {
+			let userId = $(selectedEmployeeRow.row).attr('userid');
+			ArchiveEmployee(userId);
+		}
+	});
+
+	$('#cancelEmployeeRemoveButton').click(function () {
+		clickSound.play();
+		DisplayModal('.pop-up-confirmEmployeeRemove', false);
+		DisplayMessage('Отмена операции удаления аккаунта сотрудника', true);
+	});
+
 	$('#archEmployees').click(function () {
+		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'archEmployees';
 		GetEmployees(0);
@@ -43,6 +84,7 @@ $(document).ready(function () {
 	});
 
 	$('#archPositions').click(function () {
+		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'archPositions';
 		GetPositions(0);
@@ -50,6 +92,7 @@ $(document).ready(function () {
 	});
 
 	$('#archRoles').click(function () {
+		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'archRoles';
 		GetRoles(0);
@@ -57,16 +100,35 @@ $(document).ready(function () {
 	});
 
 	$('#siteEmail').click(function () {
+		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'siteEmail';
 		GetAppEmailAccounts();
 		DisplayMessage("Данные актуального почтового аккаунта сайта ТЧЭ-2 \"Омск\" загружены", true);
 	});
+
+	$('#infoDisplay').on('click', 'tr', function () {
+		clickSound.play();
+		if (selectedEmployeeRow != 'undefined') {
+			$(selectedEmployeeRow.row)
+				.css('color', '#04eaed')
+				.css('background-color', selectedEmployeeRow.defaultBGColor)
+				.css('box-shadow', 'none');
+		}
+
+		selectedEmployeeRow = {
+			row: $(this),
+			defaultColor: $(this).css('color'), 
+			defaultBGColor: $(this).css('background-color') 
+		};
+
+		$(this).css('background-color', 'gold').css('color', 'black').css('box-shadow', '0px 0px 7px 4px orange');
+	});
 });
 
 function GetPositionsForSelect(isActual) {
 	$.ajax({
-		url: 'https://localhost:44356/content/getpositions?page=' + pageNumber + "&isActual=" + isActual,
+		url: 'https://localhost:44356/content/getpositions?page=' + 0 + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
 			let result = JSON.parse(response);
@@ -91,7 +153,7 @@ function GetPositionsForSelect(isActual) {
 
 function GetRolesForSelect(isActual) {
 	$.ajax({
-		url: 'https://localhost:44356/content/getroles?page=' + pageNumber + "&isActual=" + isActual,
+		url: 'https://localhost:44356/content/getroles?page=' + 0 + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
 			let result = JSON.parse(response);
@@ -212,6 +274,20 @@ function DisplayAppEmailAccounts(result) {
 			}
 			div.appendChild(table);
 			SetControlPanels(count);
+		}
+	});
+}
+
+function ArchiveEmployee(userId) {
+	$.ajax({
+		url: 'https://localhost:44356/content/removeEmployee?userId=' + userId,
+		method: 'DELETE',
+		success: function (response) {
+			GetEmployees(1);
+			DisplayMessage(response, true);
+		},
+		error: function () {
+			DisplayMessage('Ошибка выполнения запроса удаления аккаунта сотрудника');
 		}
 	});
 }

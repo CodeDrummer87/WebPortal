@@ -1,5 +1,6 @@
 ﻿.pop-up-nameSetting,
-.pop-up-createNewEmployee {
+.pop-up-createNewEmployee,
+.pop-up-confirmEmployeeRemove {
     flex-direction: column;
     padding: 0;
     position: fixed;
@@ -18,7 +19,7 @@
     margin: 12% auto;
     border-radius: 5%;
     border: 1px solid #48ff5b;
-    box-shadow: 0px 0px 7px 3px #48ff5b;
+    box-shadow: 0 0 7px 3px #48ff5b;
 }
 
 .pop-up-createNewEmployee {
@@ -77,4 +78,42 @@
 #lowerBasement button {
     background-color: #fbe56c;
     width: 27%;
+}
+
+.pop-up-confirmEmployeeRemove {
+    width: 30%;
+    height: 12%;
+    margin: 12% auto;
+    border-radius: 4px;
+    border: 1px solid #48ff5b;
+    box-shadow: 0 0 7px 3px #48ff5b;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.confirmEmplRemove-buttons-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 7px;
+}
+
+.pop-up-confirmEmployeeRemove>p {
+    color: gold;
+    font-size: 1.1rem;
+    font-family: Serpentine;
+}
+
+#employeeRemoveConfirmButton:hover {
+    background-color: #ff6a00;
+}
+
+#cancelEmployeeRemoveButton:hover {
+    background-color: #fbe56c;
+}
+
+#employeeRemoveConfirmButton:active,
+#cancelEmployeeRemoveButton:active {
+    background-color: #3f3c3c;
+    color: #fbe56c;
 }

@@ -172,15 +172,18 @@ namespace TCH2_WestSiberianRailroad.Controllers
             return JsonConvert.SerializeObject(result);
         }
 
-        [HttpGet]
-        public bool CheckEmailStatus()
+        [HttpDelete]
+        public string RemoveEmployee(int userId)
         {
-            User user = account.GetCurrentUser();
-            if (user.ConfirmedEmail == (byte)1)
+            User user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
             {
-                return true;
+                user.IsActual = 0;
+                db.SaveChanges();
+                return $"Сотрудник {user.LastName} {user.FirstName[0]}.{user.MiddleName[0]}. перенесён в архив.";
             }
-            else return false;
+
+            return "Ошибка удаления: сотрудник не найден";
         }
     }
 }
