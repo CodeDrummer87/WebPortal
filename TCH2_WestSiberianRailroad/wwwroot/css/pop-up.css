@@ -9,7 +9,7 @@
     right: 0;
     background-color: #1b1b1b;
     z-index: 150;
-    transition: all 4.5s ease-in;   
+    transition: all 4.5s ease-in;
     display: none;
 }
 
@@ -31,6 +31,10 @@
     border-radius: 1%;
     border: 1px solid gold;
     box-shadow: 0px 0px 7px 3px orange;
+}
+
+#executeUpdateEmployeeData {
+    display: none;
 }
 
 .pop-up-createNewEmp-block {
@@ -75,6 +79,13 @@
     background-color: #a8fafa;
 }
 
+#lowerBasement {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 #lowerBasement button {
     background-color: #fbe56c;
     width: 27%;
@@ -85,8 +96,8 @@
     height: 12%;
     margin: 12% auto;
     border-radius: 4px;
-    border: 1px solid #48ff5b;
-    box-shadow: 0 0 7px 3px #48ff5b;
+    border: 1px solid gold;
+    box-shadow: 0px 0px 7px 3px orange;
     align-items: center;
     justify-content: space-around;
 }

@@ -13,10 +13,10 @@ $(document).ready(function () {
 			case 'positions': DisplayMessage('Добавление в систему новой должности', true);
 				break;
 			case 'employees': DisplayMessage('Создание аккаунта нового сотрудника', true);
+				DisplayUpdateButtonForModal('#executeUpdateEmployeeData', false);
 				DisplayModal('.pop-up-createNewEmployee', true);
-				$('#inpCreateEmail').focus();
-				GetPositionsForSelect(1);
-				GetRolesForSelect(1);
+				GetPositionsForSelect(1, 1);
+				GetRolesForSelect(1, 1);
 				break;
 			case 'roles': DisplayMessage('Будет добавлена новая роль', true); break;
 			case 'siteEmail': DisplayMessage('Актуальный почтовый аккаунт для сайта ТЧЭ-2 \"Омск\" будет изменён', true); break;
@@ -44,6 +44,29 @@ $(document).ready(function () {
 		}
 	});
 
+	$('#updateEntity').click(function () {
+		clickSound.play();
+		switch (currentEntities) {
+			case 'positions': DisplayMessage('Изменить должность', true);
+				break;
+			case 'employees':
+				if (selectedEmployeeRow != 'undefined') {
+					DisplayUpdateButtonForModal('#executeUpdateEmployeeData', true);					
+					let userId = $(selectedEmployeeRow.row).attr('userid');
+					GetCurrentEmployeeData(userId);
+					DisplayModal('.pop-up-createNewEmployee', true);
+					break;
+				}
+				else {
+					DisplayMessage('Не выбран сотрудник', false);
+				}
+				break;
+			case 'roles': DisplayMessage('Изменить роль', true); break;
+			case 'siteEmail': DisplayMessage('Изменить ктуальный почтовый аккаунт для сайта ТЧЭ-2 \"Омск\"', true); break;
+			default: DisplayMessage('Кнопка нажата, но контекст не выбран', false);
+		}
+	});
+
 	$('#executeCreatingNewAccount').click(function () {
 		modifySound.play();
 		CreateNewAccount();
@@ -58,6 +81,11 @@ $(document).ready(function () {
 	$('#cancelCreatingNewAccount').click(function () {
 		clickSound.play();
 		DisplayModal('.pop-up-createNewEmployee', false);
+	});
+
+	$('#executeUpdateEmployeeData').click(function () {
+		modifySound.play();
+		UpdateCurrentEmployeeData();
 	});
 
 	$('#employeeRemoveConfirmButton').click(function () {
@@ -126,7 +154,7 @@ $(document).ready(function () {
 	});
 });
 
-function GetPositionsForSelect(isActual) {
+function GetPositionsForSelect(isActual, index) {
 	$.ajax({
 		url: 'https://localhost:44356/content/getpositions?page=' + 0 + "&isActual=" + isActual,
 		method: 'GET',
@@ -138,7 +166,7 @@ function GetPositionsForSelect(isActual) {
 			for (let i = 0; i < elementCount; i++) {
 				let option = document.createElement('option');
 				$(option).attr('value', result[i].Id);
-				if (i == 1) {
+				if (i == index) {
 					$(option).attr('selected', 'selected');
 				}
 				$(option).text(result[i].FullName);
@@ -151,7 +179,7 @@ function GetPositionsForSelect(isActual) {
 	});
 }
 
-function GetRolesForSelect(isActual) {
+function GetRolesForSelect(isActual, index) {
 	$.ajax({
 		url: 'https://localhost:44356/content/getroles?page=' + 0 + "&isActual=" + isActual,
 		method: 'GET',
@@ -163,7 +191,7 @@ function GetRolesForSelect(isActual) {
 			for (let i = 0; i < elementCount; i++) {
 				let option = document.createElement('option');
 				$(option).attr('value', result[i].Id);
-				if (i == 1) {
+				if (i == index) {
 					$(option).attr('selected', 'selected');
 				}
 				$(option).text(result[i].RoleName);
@@ -189,6 +217,8 @@ function ClearFieldsForCreatingNewEmployee() {
 	$('#inpCreateLastName').val('');
 	$('#inpCreateFirstName').val('');
 	$('#inpCreateMiddleName').val('');
+	GetPositionsForSelect(1, 1);
+	GetRolesForSelect(1, 1);
 }
 
 function CreateNewAccount() {
@@ -278,11 +308,66 @@ function DisplayAppEmailAccounts(result) {
 	});
 }
 
+function GetCurrentEmployeeData(userId) {
+	$.ajax({
+		url: 'https://localhost:44356/content/GetCurrentUserById?userId=' + userId,
+		method: 'GET',
+		success: function (response) {
+			let user = JSON.parse(response);
+			DisplayEmployeeDataInModal(user[0]);
+		},
+		error: function () {
+
+		}
+	});
+}
+
+function DisplayEmployeeDataInModal(user) {
+	$('#inpCreateEmail').val(user.Email);
+	$('#inpCreateLastName').val(user.LastName);
+	$('#inpCreateFirstName').val(user.FirstName);
+	$('#inpCreateMiddleName').val(user.MiddleName);
+	GetRolesForSelect(1, user.RoleId - 1);
+	GetPositionsForSelect(1, user.PositionId - 1);
+}
+
+function UpdateCurrentEmployeeData() {
+
+	userId = $(selectedEmployeeRow.row).attr('userid');
+	email = $('#inpCreateEmail').val();
+	firstName = $('#inpCreateFirstName').val();
+	lastName = $('#inpCreateLastName').val();
+	middleName = $('#inpCreateMiddleName').val();
+	positionId = +$('#selectPosition').val();
+	roleId = +$('#selectRole').val();
+
+	$.ajax({
+		url: 'https://localhost:44356/content/updateEmployeeData?userId=' + userId +
+			'&email=' + email + '&firstName=' + firstName + '&lastName=' + lastName + '&middleName=' + middleName +
+			'&positionId=' + positionId + '&roleId=' + roleId,
+		method: 'PUT',
+		success: function (response) {
+			if (response != 'Сотрудник не найден') {
+				GetEmployees(1);
+				DisplayModal('.pop-up-createNewEmployee', false);
+				DisplayMessage(response, true);
+			}
+			else {
+				DisplayMessage(response, false);
+			}
+		},
+		error: function () {
+			DisplayMessage("Ошибка выполнения запроса на изменение данных сотрудника", false);
+		}
+	});
+}
+
 function ArchiveEmployee(userId) {
 	$.ajax({
 		url: 'https://localhost:44356/content/removeEmployee?userId=' + userId,
 		method: 'DELETE',
 		success: function (response) {
+			selectedEmployeeRow = 'undefined';
 			GetEmployees(1);
 			DisplayMessage(response, true);
 		},

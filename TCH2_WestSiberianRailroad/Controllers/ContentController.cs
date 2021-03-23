@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RailroadPortalClassLibrary;
@@ -170,6 +169,42 @@ namespace TCH2_WestSiberianRailroad.Controllers
                 e.IsActual
             }).Skip(page * 14).Take(14);
             return JsonConvert.SerializeObject(result);
+        }
+
+        [HttpGet]
+        public string GetCurrentUserById(int userId)
+        {
+            var result = db.Users
+                .Where(u => u.Id == userId).Select(u => new
+                {
+                    u.Email,
+                    u.FirstName,
+                    u.LastName,
+                    u.MiddleName,
+                    u.RoleId,
+                    u.PositionId
+                });
+
+            return JsonConvert.SerializeObject(result);
+        }
+
+        [HttpPut]
+        public string UpdateEmployeeData(int userId, string email, string firstName, string lastName, string middleName, int positionId, int roleId)
+        {
+            User user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
+            {
+                user.Email = email;
+                user.FirstName = firstName;
+                user.LastName = lastName;
+                user.MiddleName = middleName;
+                user.PositionId = positionId;
+                user.RoleId = roleId;
+
+                db.SaveChanges();
+                return $"Данные сотрудника {user.LastName} {user.FirstName[0]}.{user.MiddleName[0]} обновлены";
+            }
+            return "Сотрудник не найден";
         }
 
         [HttpDelete]

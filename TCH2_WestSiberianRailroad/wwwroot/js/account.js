@@ -95,6 +95,7 @@ function GetEmployees(isActual) {
 		url: 'https://localhost:44356/content/getemployees?page=' + pageNumber + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
+			selectedEmployeeRow = 'undefined';
 			let result = JSON.parse(response);
 			DisplayEmployees(result, isActual);
 		},

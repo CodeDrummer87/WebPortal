@@ -86,3 +86,19 @@ function DisplayModal(id, isShow) {
         $(id).css('display', 'none');
 	}
 }
+
+function DisplayUpdateButtonForModal(id, success) {
+
+    ClearFieldsForCreatingNewEmployee();
+    if (success) {
+        $('#headerBasement > h3').text('Редактирование данных сотрудника');
+        $(id).css('display', 'block');
+        $('#executeCreatingNewAccount').css('display', 'none');
+    }
+    else {
+        $('#headerBasement > h3').text('Данные нового сотрудника');
+        $(id).css('display', 'none');
+        $('#executeCreatingNewAccount').css('display', 'block');
+    }
+    $('#inpCreateEmail').focus();
+}
