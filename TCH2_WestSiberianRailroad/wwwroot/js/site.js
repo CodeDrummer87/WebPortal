@@ -102,3 +102,18 @@ function DisplayUpdateButtonForModal(id, success) {
     }
     $('#inpCreateEmail').focus();
 }
+
+function DisplayArchiveControlPanel(on) {
+    if (on) {
+        $('#recoverEntity').css('display', 'block');
+        $('#addNewEntity').css('display', 'none');
+        $('#updateEntity').css('display', 'none');
+        $('#deleteEntity').css('display', 'none');
+    }
+    else {
+        $('#recoverEntity').css('display', 'none');
+        $('#addNewEntity').css('display', 'block');
+        $('#updateEntity').css('display', 'block');
+        $('#deleteEntity').css('display', 'block');
+	}
+}

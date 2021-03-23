@@ -15,6 +15,7 @@ $(document).ready(function () {
 		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'positions';
+		DisplayArchiveControlPanel(false);
 		GetPositions(1);
 		DisplayMessage("Список текущих должностей в ТЧЭ-2 'Омск' загружен", true);
 	});
@@ -23,6 +24,7 @@ $(document).ready(function () {
 		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'employees';
+		DisplayArchiveControlPanel(false);
 		GetEmployees(1);
 		DisplayMessage("Список сотрудников ТЧЭ-2 'Омск' загружен", true);
 	});
@@ -31,6 +33,7 @@ $(document).ready(function () {
 		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'roles';
+		DisplayArchiveControlPanel(false);
 		GetRoles(1);
 		DisplayMessage("Список ролей для сайта ТЧЭ-2 'Омск' загружен", true);
 	});
@@ -354,5 +357,5 @@ function SetControlPanels(count) {
 		$('#paginationBlock').css('display', 'none');
 	}
 
-	$('#controlPanel').css('display', 'block');
+	$('#controlPanel').css('display', 'flex');
 }

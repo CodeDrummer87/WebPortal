@@ -104,20 +104,21 @@ namespace TCH2_WestSiberianRailroad.Controllers
         [HttpGet]
         public string GetRoles(int page, byte isActual)
         {
-            var result = db.Roles.Where(i => i.IsActual == isActual).GroupJoin(db.Users.GroupBy(u => u.RoleId).Select(g => new
-            {
-                RoleId = g.Key,
-                Count = g.Count()
-            }),
-                        r => r.Id,
-                        u => u.RoleId,
-                        (r, u) => new { r, u })
-                .SelectMany(all => all.u.DefaultIfEmpty(), (role, user) => new
+            var result = db.Roles.Where(i => i.IsActual == isActual)
+                .GroupJoin(db.Users.Where(u => u.IsActual == isActual).GroupBy(u => u.RoleId).Select(g => new
                 {
-                    Id = role.r.Id,
-                    RoleName = role.r.Name,
-                    Count = user.Count
-                }).Skip(page * 14).Take(14).ToList();
+                    RoleId = g.Key,
+                    Count = g.Count()
+                }),
+                            r => r.Id,
+                            u => u.RoleId,
+                            (r, u) => new { r, u })
+                    .SelectMany(all => all.u.DefaultIfEmpty(), (role, user) => new
+                    {
+                        Id = role.r.Id,
+                        RoleName = role.r.Name,
+                        Count = user.Count
+                    }).Skip(page * 14).Take(14).ToList();
 
             return JsonConvert.SerializeObject(result);
         }
@@ -219,6 +220,21 @@ namespace TCH2_WestSiberianRailroad.Controllers
             }
 
             return "Ошибка удаления: сотрудник не найден";
+        }
+
+        [HttpPut]
+        public string RecoverEmployeeFromArchive(int userId)
+        {
+            User user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
+            {
+                user.IsActual = 1;
+                db.SaveChanges();
+
+                return $"Сотрудник {user.LastName} {user.FirstName[0]}.{user.MiddleName[0]}. восстановлен из архива";
+            }
+
+            return string.Empty;
         }
     }
 }

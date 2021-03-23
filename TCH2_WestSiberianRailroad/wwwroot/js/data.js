@@ -3,6 +3,7 @@
 //.:: Variable to store the current context :::
 var currentEntities = 'none';
 var selectedEmployeeRow = 'undefined';
+var selectedPositionRow = 'undefined';
 
 $(document).ready(function () {
 
@@ -67,6 +68,16 @@ $(document).ready(function () {
 		}
 	});
 
+	$('#recoverEntity').click(function () {
+		clickSound.play();
+		if (selectedEmployeeRow != 'undefined') {
+			DisplayModal('.pop-up-confirmRecover', true);
+		}
+		else {
+			DisplayMessage('Не выбран сотрудник из архива', false);
+		}
+	});
+
 	$('#executeCreatingNewAccount').click(function () {
 		modifySound.play();
 		CreateNewAccount();
@@ -100,13 +111,27 @@ $(document).ready(function () {
 	$('#cancelEmployeeRemoveButton').click(function () {
 		clickSound.play();
 		DisplayModal('.pop-up-confirmEmployeeRemove', false);
-		DisplayMessage('Отмена операции удаления аккаунта сотрудника', true);
+	});
+
+	$('#recoverConfirmButton').click(function () {
+		recoverSound.play();
+		DisplayModal('.pop-up-confirmRecover', false);
+		if (selectedEmployeeRow != 'undefined') {
+			let userId = $(selectedEmployeeRow.row).attr('userid');
+			RecoverEmployeeFromArchive(userId);
+		}
+	});
+
+	$('#cancelRecoverButton').click(function () {
+		clickSound.play();
+		DisplayModal('.pop-up-confirmRecover', false);
 	});
 
 	$('#archEmployees').click(function () {
 		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'archEmployees';
+		DisplayArchiveControlPanel(true);
 		GetEmployees(0);
 		DisplayMessage("Архив сотрудников ТЧЭ-2 'Омск' загружен", true);
 	});
@@ -115,6 +140,7 @@ $(document).ready(function () {
 		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'archPositions';
+		DisplayArchiveControlPanel(true);
 		GetPositions(0);
 		DisplayMessage("Архив должностей ТЧЭ-2 'Омск' загружен", true);
 	});
@@ -123,6 +149,7 @@ $(document).ready(function () {
 		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'archRoles';
+		DisplayArchiveControlPanel(true);
 		GetRoles(0);
 		DisplayMessage("Архив ролей сайта ТЧЭ-2 'Омск' загружен", true);
 	});
@@ -131,26 +158,29 @@ $(document).ready(function () {
 		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'siteEmail';
+		DisplayArchiveControlPanel(false);
 		GetAppEmailAccounts();
 		DisplayMessage("Данные актуального почтового аккаунта сайта ТЧЭ-2 \"Омск\" загружены", true);
 	});
 
 	$('#infoDisplay').on('click', 'tr', function () {
-		clickSound.play();
-		if (selectedEmployeeRow != 'undefined') {
-			$(selectedEmployeeRow.row)
-				.css('color', '#04eaed')
-				.css('background-color', selectedEmployeeRow.defaultBGColor)
-				.css('box-shadow', 'none');
+		if ($(this).attr('userid') != null) {
+			clickSound.play();
+			if (selectedEmployeeRow != 'undefined') {
+				$(selectedEmployeeRow.row)
+					.css('color', '#04eaed')
+					.css('background-color', selectedEmployeeRow.defaultBGColor)
+					.css('box-shadow', 'none');
+			}
+
+			selectedEmployeeRow = {
+				row: $(this),
+				defaultColor: $(this).css('color'),
+				defaultBGColor: $(this).css('background-color')
+			};
+
+			$(this).css('background-color', 'gold').css('color', 'black').css('box-shadow', '0px 0px 7px 4px orange');
 		}
-
-		selectedEmployeeRow = {
-			row: $(this),
-			defaultColor: $(this).css('color'), 
-			defaultBGColor: $(this).css('background-color') 
-		};
-
-		$(this).css('background-color', 'gold').css('color', 'black').css('box-shadow', '0px 0px 7px 4px orange');
 	});
 });
 
@@ -367,12 +397,25 @@ function ArchiveEmployee(userId) {
 		url: 'https://localhost:44356/content/removeEmployee?userId=' + userId,
 		method: 'DELETE',
 		success: function (response) {
-			selectedEmployeeRow = 'undefined';
 			GetEmployees(1);
 			DisplayMessage(response, true);
 		},
 		error: function () {
 			DisplayMessage('Ошибка выполнения запроса удаления аккаунта сотрудника');
+		}
+	});
+}
+
+function RecoverEmployeeFromArchive(userId) {
+	$.ajax({
+		url: 'https://localhost:44356/content/recoverEmployeeFromArchive?userId=' + userId,
+		method: 'PUT',
+		success: function (response) {
+			GetEmployees(0);
+			DisplayMessage(response, true);
+		},
+		error: function () {
+			DisplayMessage('Ошибка выполнения запроса восстановления сотрудника');
 		}
 	});
 }

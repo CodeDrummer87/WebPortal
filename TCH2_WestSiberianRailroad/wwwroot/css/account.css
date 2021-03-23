@@ -156,7 +156,14 @@ table td {
 
 #controlPanel {
     display: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     height: 5%;
+}
+
+#recoverEntity {
+    display: none;
 }
 
 #controlPanel>button {

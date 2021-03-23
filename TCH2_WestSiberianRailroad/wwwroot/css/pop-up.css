@@ -1,6 +1,7 @@
 ﻿.pop-up-nameSetting,
 .pop-up-createNewEmployee,
-.pop-up-confirmEmployeeRemove {
+.pop-up-confirmEmployeeRemove,
+.pop-up-confirmRecover {
     flex-direction: column;
     padding: 0;
     position: fixed;
@@ -91,7 +92,8 @@
     width: 27%;
 }
 
-.pop-up-confirmEmployeeRemove {
+.pop-up-confirmEmployeeRemove,
+.pop-up-confirmRecover {
     width: 30%;
     height: 12%;
     margin: 12% auto;
@@ -102,29 +104,34 @@
     justify-content: space-around;
 }
 
-.confirmEmplRemove-buttons-block {
+.confirm-buttons-block {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     margin-bottom: 7px;
 }
 
-.pop-up-confirmEmployeeRemove>p {
+.pop-up-confirmEmployeeRemove > p,
+.pop-up-confirmRecover > p {
     color: gold;
     font-size: 1.1rem;
     font-family: Serpentine;
 }
 
-#employeeRemoveConfirmButton:hover {
+#employeeRemoveConfirmButton:hover,
+#recoverConfirmButton:hover {
     background-color: #ff6a00;
 }
 
-#cancelEmployeeRemoveButton:hover {
+#cancelEmployeeRemoveButton:hover,
+#cancelRecoverButton:hover {
     background-color: #fbe56c;
 }
 
 #employeeRemoveConfirmButton:active,
-#cancelEmployeeRemoveButton:active {
+#cancelEmployeeRemoveButton:active,
+#recoverConfirmButton:active {
     background-color: #3f3c3c;
     color: #fbe56c;
 }
