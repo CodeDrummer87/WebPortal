@@ -25,12 +25,21 @@ $(document).ready(function () {
 	$('#deleteEntity').click(function () {
 		clickSound.play();
 		switch (currentEntities) {
-			case 'positions': DisplayMessage('Должность будет перенесена в архив', true);
+			case 'positions':
+				if (selectedRow != 'undefined') {
+					DisplayMessage('Должность будет перенесена в архив', true);
+					DisplayButtonIntoConfirmModal('#positionRemoveConfirmButton');
+					DisplayModal('.pop-up-confirmRemove', true);
+				}
+				else {
+					DisplayMesa('Не выбрана должность', false);
+				}
 				break;
 			case 'employees':
 				if (selectedRow != 'undefined') {
 					DisplayMessage('Аккаунт сотрудника будет перенесён в архив', true);
-					DisplayModal('.pop-up-confirmEmployeeRemove', true);
+					DisplayButtonIntoConfirmModal('#employeeRemoveConfirmButton');
+					DisplayModal('.pop-up-confirmRemove', true);
 				}
 				else {
 					DisplayMessage('Не выбран сотрудник', false);
@@ -111,16 +120,25 @@ $(document).ready(function () {
 
 	$('#employeeRemoveConfirmButton').click(function () {
 		removeSound.play();
-		DisplayModal('.pop-up-confirmEmployeeRemove', false);
+		DisplayModal('.pop-up-confirmRemove', false);
 		if (selectedRow != 'undefined') {
 			let userId = $(selectedRow.row).attr('userid');
 			ArchiveEmployee(userId);
 		}
 	});
 
+	$('#positionRemoveConfirmButton').click(function () {
+		removeSound.play();
+		DisplayModal('.pop-up-confirmRemove', false);
+		if (selectedRow != 'undefined') {
+			let positionId = $(selectedRow.row).attr('positionId');
+			ArchivePosition(positionId);
+		}
+	});
+
 	$('#cancelEmployeeRemoveButton').click(function () {
 		clickSound.play();
-		DisplayModal('.pop-up-confirmEmployeeRemove', false);
+		DisplayModal('.pop-up-confirmRemove', false);
 	});
 
 	$('#recoverConfirmButton').click(function () {
@@ -493,6 +511,25 @@ function UpdateCurrentPositionData() {
 		},
 		error: function () {
 			DisplayMessage('Ошибка выполнения запроса на редактирование должности', false);
+		}
+	});
+}
+
+function ArchivePosition(positionId) {
+	$.ajax({
+		url: 'https://localhost:44356/content/removePosition?positionId=' + positionId,
+		method: 'DELETE',
+		success: function (response) {
+			if (response != '') {
+				GetPositions(1);
+				DisplayMessage(response, true);
+			}
+			else {
+				DisplayMessage('Должность не существует', false);
+			}
+		},
+		error: function () {
+			DisplayMessage('Ошибка выполнения запроса сохранения должности в архив', false);
 		}
 	});
 }

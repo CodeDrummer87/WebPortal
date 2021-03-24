@@ -185,3 +185,9 @@ function ClearFieldsForActionWithPositionModal() {
     $('#newPositionAbbreviation').val('');
     $('#newPositionName').val('');
 }
+
+function DisplayButtonIntoConfirmModal(id) {
+    $('#employeeRemoveConfirmButton').css('display', 'none');
+    $('#positionRemoveConfirmButton').css('display', 'none');
+    $(id).css('display', 'block');
+}

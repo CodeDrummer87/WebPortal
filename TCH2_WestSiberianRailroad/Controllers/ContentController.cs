@@ -288,5 +288,20 @@ namespace TCH2_WestSiberianRailroad.Controllers
 
             return string.Empty;
         }
+
+        [HttpDelete]
+        public string RemovePosition(int positionId)
+        {
+            Position position = db.Positions.FirstOrDefault(p => p.Id == positionId);
+            if (position != null)
+            {
+                position.IsActual = 0;
+                db.SaveChanges();
+
+                return $"Должность {position.FullName} перенесена в архив";
+            }
+
+            return string.Empty;
+        }
     }
 }

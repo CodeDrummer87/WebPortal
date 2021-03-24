@@ -1,6 +1,6 @@
 ﻿.pop-up-nameSetting,
 .pop-up-createNewEmployee,
-.pop-up-confirmEmployeeRemove,
+.pop-up-confirmRemove,
 .pop-up-confirmRecover,
 .pop-up-actionWithPosition {
     flex-direction: column;
@@ -89,6 +89,7 @@ select {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    margin-bottom: 7px;
 }
 
 #lowerBasement button {
@@ -96,7 +97,7 @@ select {
     width: 27%;
 }
 
-.pop-up-confirmEmployeeRemove,
+.pop-up-confirmRemove,
 .pop-up-confirmRecover {
     width: 30%;
     height: 12%;
@@ -116,7 +117,7 @@ select {
     margin-bottom: 7px;
 }
 
-.pop-up-confirmEmployeeRemove > p,
+.pop-up-confirmRemove > p,
 .pop-up-confirmRecover > p {
     color: gold;
     font-size: 1.1rem;
@@ -124,7 +125,8 @@ select {
 }
 
 #employeeRemoveConfirmButton:hover,
-#recoverConfirmButton:hover {
+#recoverConfirmButton:hover,
+#positionRemoveConfirmButton:hover {
     background-color: #ff6a00;
 }
 
@@ -135,7 +137,8 @@ select {
 
 #employeeRemoveConfirmButton:active,
 #cancelEmployeeRemoveButton:active,
-#recoverConfirmButton:active {
+#recoverConfirmButton:active,
+#positionRemoveConfirmButton :active {
     background-color: #3f3c3c;
     color: #fbe56c;
 }
