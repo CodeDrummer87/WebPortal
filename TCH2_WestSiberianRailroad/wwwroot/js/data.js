@@ -84,11 +84,23 @@ $(document).ready(function () {
 
 	$('#recoverEntity').click(function () {
 		clickSound.play();
-		if (selectedRow != 'undefined') {
-			DisplayModal('.pop-up-confirmRecover', true);
-		}
-		else {
-			DisplayMessage('Не выбран сотрудник из архива', false);
+		switch (currentEntities) {
+			case 'archEmployees':
+				if (selectedRow != 'undefined') {
+					DisplayModal('.pop-up-confirmRecover', true);
+				}
+				else {
+					DisplayMessage('Не выбран сотрудник из архива', false);
+				}
+				break;
+			case 'archPositions':
+				if (selectedRow != 'undefined') {
+					DisplayModal('.pop-up-confirmRecover', true);
+				}
+				else {
+					DisplayMessage('Не выбрана должность', false);
+				}
+				break;
 		}
 	});
 
@@ -145,8 +157,16 @@ $(document).ready(function () {
 		recoverSound.play();
 		DisplayModal('.pop-up-confirmRecover', false);
 		if (selectedRow != 'undefined') {
-			let userId = $(selectedRow.row).attr('userid');
-			RecoverEmployeeFromArchive(userId);
+			switch (currentEntities) {
+				case 'archEmployees':
+					let userId = $(selectedRow.row).attr('userid');
+					RecoverEmployeeFromArchive(userId);
+					break;
+				case 'archPositions':
+					let positionId = $(selectedRow.row).attr('positionid');
+					RecoverPositionFromArchive(positionId);
+					break;
+			}
 		}
 	});
 
@@ -359,7 +379,7 @@ function GetCurrentEmployeeData(userId) {
 			DisplayEmployeeDataInModal(user[0]);
 		},
 		error: function () {
-
+			DisplayMessage('Ошибка выполнения запроса получения данных выбранного сотрудника', false);
 		}
 	});
 }
@@ -530,6 +550,20 @@ function ArchivePosition(positionId) {
 		},
 		error: function () {
 			DisplayMessage('Ошибка выполнения запроса сохранения должности в архив', false);
+		}
+	});
+}
+
+function RecoverPositionFromArchive(positionId) {
+	$.ajax({
+		url: 'https://localhost:44356/content/recoverPositionFromArchive?positionId=' + positionId,
+		method: 'PUT',
+		success: function (response) {
+			GetPositions(0);
+			DisplayMessage(response, true);
+		},
+		error: function () {
+			DisplayMessage('Ошибка выполнения запроса восстановления должности', false);
 		}
 	});
 }

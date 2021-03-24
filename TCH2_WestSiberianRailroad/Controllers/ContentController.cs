@@ -303,5 +303,20 @@ namespace TCH2_WestSiberianRailroad.Controllers
 
             return string.Empty;
         }
+
+        [HttpPut]
+        public string RecoverPositionFromArchive(int positionId)
+        {
+            Position position = db.Positions.FirstOrDefault(p => p.Id == positionId);
+            if (position != null)
+            {
+                position.IsActual = 1;
+                db.SaveChanges();
+
+                return $"Должность {position.FullName} восстановлена из архива";
+            }
+
+            return string.Empty;
+        }
     }
 }
