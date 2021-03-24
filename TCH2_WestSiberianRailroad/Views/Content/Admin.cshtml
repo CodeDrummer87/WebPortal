@@ -66,8 +66,8 @@
 
 <div class="pop-up-createNewEmployee">
     <div class="pop-up-createNewEmpl-block" id="headerBasement">
-        <h3>Данные нового сотрудника</h3>
-        <p>Регистрация аккаунта по Email: <input type="text" id="inpCreateEmail" placeholder="Email" autofocusa autocomplete="off" /></p>
+        <h3 id="headerEmplName">Данные нового сотрудника</h3>
+        <p>Регистрация аккаунта по Email: <input type="text" id="inpCreateEmail" placeholder="Email" autofocus autocomplete="off" /></p>
         <hr />
     </div>
     <div class="pop-up-createNewEmpl-block">
@@ -102,5 +102,23 @@
     <div class="confirm-buttons-block">
         <button id="recoverConfirmButton">Подтвердить</button>
         <button id="cancelRecoverButton">Отмена</button>
+    </div>
+</div>
+
+<div class="pop-up-actionWithPosition">
+    <div class="pop-up-block" id="headerBasement">
+        <h3 id="headerPositionName">Должность для ТЧЭ-2 "Омск"</h3>
+    </div>
+    <div class="pop-up-block" id="upperBasement">
+        <p>Аббревиатура (опционально)</p>
+        <input type="text" id="newPositionAbbreviation" placeholder="Аббревиатура" autocomplete="off" />
+        <hr />
+    </div>
+    <div class="pop-up-block">
+        <input type="text" id="newPositionName" placeholder="Новая должность" autofocus autocomplete="off" />
+    </div>
+    <div class="pop-up-block" id="lowerBasement">
+        <button id="addNewPosition">Добавить</button>
+        <button id="closePositionModal">Отмена</button>
     </div>
 </div>

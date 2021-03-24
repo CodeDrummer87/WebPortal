@@ -12,12 +12,13 @@ $(document).ready(function () {
 		ClearFieldsForCreatingNewEmployee();
 		switch (currentEntities) {
 			case 'positions': DisplayMessage('Добавление в систему новой должности', true);
+				DisplayModal('.pop-up-actionWithPosition', true);
 				break;
 			case 'employees': DisplayMessage('Создание аккаунта нового сотрудника', true);
 				DisplayUpdateButtonForModal('#executeUpdateEmployeeData', false);
 				DisplayModal('.pop-up-createNewEmployee', true);
 				GetPositionsForSelect(1, 1);
-				GetRolesForSelect(1, 1);
+				GetRolesForSelect('#selectRole', 1, 1);
 				break;
 			case 'roles': DisplayMessage('Будет добавлена новая роль', true); break;
 			case 'siteEmail': DisplayMessage('Актуальный почтовый аккаунт для сайта ТЧЭ-2 \"Омск\" будет изменён', true); break;
@@ -127,13 +128,25 @@ $(document).ready(function () {
 		DisplayModal('.pop-up-confirmRecover', false);
 	});
 
+	$('#addNewPosition').click(function () {
+		modifySound.play();
+		DisplayModal('.pop-up-actionWithPosition', false);
+		SaveNewPosition();
+	});
+
+	$('#closePositionModal').click(function () {
+		clickSound.play();
+		DisplayModal('.pop-up-actionWithPosition', false);
+		ClearFieldsPositionModal();
+	});
+
 	$('#archEmployees').click(function () {
 		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'archEmployees';
 		DisplayArchiveControlPanel(true);
 		GetEmployees(0);
-		DisplayMessage("Архив сотрудников ТЧЭ-2 'Омск' загружен", true);
+		DisplayMessage("Архив сотрудников ТЧЭ-2 'Омск' загружается", true);
 	});
 
 	$('#archPositions').click(function () {
@@ -142,7 +155,7 @@ $(document).ready(function () {
 		currentEntities = 'archPositions';
 		DisplayArchiveControlPanel(true);
 		GetPositions(0);
-		DisplayMessage("Архив должностей ТЧЭ-2 'Омск' загружен", true);
+		DisplayMessage("Архив должностей ТЧЭ-2 'Омск' загружается", true);
 	});
 
 	$('#archRoles').click(function () {
@@ -151,7 +164,7 @@ $(document).ready(function () {
 		currentEntities = 'archRoles';
 		DisplayArchiveControlPanel(true);
 		GetRoles(0);
-		DisplayMessage("Архив ролей сайта ТЧЭ-2 'Омск' загружен", true);
+		DisplayMessage("Архив ролей сайта ТЧЭ-2 'Омск' загружается", true);
 	});
 
 	$('#siteEmail').click(function () {
@@ -160,7 +173,7 @@ $(document).ready(function () {
 		currentEntities = 'siteEmail';
 		DisplayArchiveControlPanel(false);
 		GetAppEmailAccounts();
-		DisplayMessage("Данные актуального почтового аккаунта сайта ТЧЭ-2 \"Омск\" загружены", true);
+		DisplayMessage("Данные актуального почтового аккаунта сайта ТЧЭ-2 \"Омск\" загружаются", true);
 	});
 
 	$('#infoDisplay').on('click', 'tr', function () {
@@ -209,14 +222,14 @@ function GetPositionsForSelect(isActual, index) {
 	});
 }
 
-function GetRolesForSelect(isActual, index) {
+function GetRolesForSelect(id, isActual, index) {
 	$.ajax({
 		url: 'https://localhost:44356/content/getroles?page=' + 0 + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
 			let result = JSON.parse(response);
-			$('#selectRole option').remove();
-			let select = document.querySelector('#selectRole');
+			$(id + ' option').remove();
+			let select = document.querySelector(id);
 			let elementCount = result.length;
 			for (let i = 0; i < elementCount; i++) {
 				let option = document.createElement('option');
@@ -229,7 +242,7 @@ function GetRolesForSelect(isActual, index) {
 			}
 		},
 		error: function () {
-			DisplayRequestErrorWarning('#selectRole');
+			DisplayRequestErrorWarning(id);
 		}
 	});
 }
@@ -248,7 +261,7 @@ function ClearFieldsForCreatingNewEmployee() {
 	$('#inpCreateFirstName').val('');
 	$('#inpCreateMiddleName').val('');
 	GetPositionsForSelect(1, 1);
-	GetRolesForSelect(1, 1);
+	GetRolesForSelect('#selectRole', 1, 1);
 }
 
 function CreateNewAccount() {
@@ -357,7 +370,7 @@ function DisplayEmployeeDataInModal(user) {
 	$('#inpCreateLastName').val(user.LastName);
 	$('#inpCreateFirstName').val(user.FirstName);
 	$('#inpCreateMiddleName').val(user.MiddleName);
-	GetRolesForSelect(1, user.RoleId - 1);
+	GetRolesForSelect('#selectRole', 1, user.RoleId - 1);
 	GetPositionsForSelect(1, user.PositionId - 1);
 }
 
@@ -416,6 +429,39 @@ function RecoverEmployeeFromArchive(userId) {
 		},
 		error: function () {
 			DisplayMessage('Ошибка выполнения запроса восстановления сотрудника');
+		}
+	});
+}
+
+function ClearFieldsPositionModal() {
+	$('#newPositionName').val('');
+	$('#newPositionAbbreviation').val('');
+}
+
+function SaveNewPosition() {
+
+	let positionData = {
+		positionName: $('#newPositionName').val(),
+		abbreviation: $('#newPositionAbbreviation').val(),
+	};
+
+	$.ajax({
+		url: 'https://localhost:44356/content/saveNewPosition',
+		method: 'POST',
+		contentType: 'application/json',
+		data: JSON.stringify(positionData),
+		success: function (response) {
+			if (response != null) {
+				GetPositions(1);
+				DisplayMessage(response, true);
+				ClearFieldsPositionModal();
+			}
+			else {
+				DisplayModal('Ошибка сохранения данных');
+			}
+		},
+		error: function () {
+			DisplayMessage('Ошибка запроса сохранения новой должности', false);
 		}
 	});
 }

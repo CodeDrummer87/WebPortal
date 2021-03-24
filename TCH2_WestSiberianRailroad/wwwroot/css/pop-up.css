@@ -1,7 +1,8 @@
 ﻿.pop-up-nameSetting,
 .pop-up-createNewEmployee,
 .pop-up-confirmEmployeeRemove,
-.pop-up-confirmRecover {
+.pop-up-confirmRecover,
+.pop-up-actionWithPosition {
     flex-direction: column;
     padding: 0;
     position: fixed;
@@ -72,12 +73,15 @@
     justify-content: space-between;
 }
 
-#upperBasement  select {
-    width: 33%;
+select {
     font-family: Verdana;
     font-weight: 500;
     border-radius: 2px;
     background-color: #a8fafa;
+}
+
+.pop-up-createNewEmpl-block select {
+    width: 33%;
 }
 
 #lowerBasement {
@@ -134,4 +138,38 @@
 #recoverConfirmButton:active {
     background-color: #3f3c3c;
     color: #fbe56c;
+}
+
+.pop-up-actionWithPosition {
+    flex-direction: column;
+    width: 30%;
+    height: 27%;
+    margin: 12% auto;
+    border-radius: 4px;
+    border: 1px solid gold;
+    box-shadow: 0px 0px 7px 3px orange;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.pop-up-block {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.pop-up-block > upperBasement {
+    display: flex;
+    flex-direction: row;
+}
+
+#selectRoleForNewPosition {
+    width: 60%;
+}
+
+#newPositionName {
+    width: 57%;
+    text-align: center;
 }

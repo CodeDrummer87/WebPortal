@@ -236,5 +236,24 @@ namespace TCH2_WestSiberianRailroad.Controllers
 
             return string.Empty;
         }
+
+        [HttpPost]
+        public string SaveNewPosition([FromBody]NewPositionData data)
+        {
+            if (data != null)
+            {
+                Position newPosition = new Position
+                {
+                    FullName = data.PositionName,
+                    Abbreviation = data.Abbreviation,
+                    IsActual = 1
+                };
+
+                db.Positions.Add(newPosition);
+                db.SaveChanges();
+            }
+
+            return string.Empty;
+        }
     }
 }

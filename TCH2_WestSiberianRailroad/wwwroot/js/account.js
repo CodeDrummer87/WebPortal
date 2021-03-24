@@ -17,7 +17,7 @@ $(document).ready(function () {
 		currentEntities = 'positions';
 		DisplayArchiveControlPanel(false);
 		GetPositions(1);
-		DisplayMessage("Список текущих должностей в ТЧЭ-2 'Омск' загружен", true);
+		DisplayMessage("Список текущих должностей в ТЧЭ-2 'Омск' загружается", true);
 	});
 
 	$('#employees').click(function () {
@@ -26,7 +26,7 @@ $(document).ready(function () {
 		currentEntities = 'employees';
 		DisplayArchiveControlPanel(false);
 		GetEmployees(1);
-		DisplayMessage("Список сотрудников ТЧЭ-2 'Омск' загружен", true);
+		DisplayMessage("Список сотрудников ТЧЭ-2 'Омск' загружается", true);
 	});
 
 	$('#roles').click(function () {
@@ -35,7 +35,7 @@ $(document).ready(function () {
 		currentEntities = 'roles';
 		DisplayArchiveControlPanel(false);
 		GetRoles(1);
-		DisplayMessage("Список ролей для сайта ТЧЭ-2 'Омск' загружен", true);
+		DisplayMessage("Список ролей для сайта ТЧЭ-2 'Омск' загружается", true);
 	});
 
 	$('.paginationPart').on('mouseover', 'img', function () {
