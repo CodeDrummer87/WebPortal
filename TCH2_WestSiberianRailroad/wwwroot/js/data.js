@@ -1,10 +1,5 @@
 ﻿//.::Script for working with data in the mainArticle block :::
 
-//.:: Variable to store the current context :::
-var currentEntities = 'none';
-var selectedEmployeeRow = 'undefined';
-var selectedPositionRow = 'undefined';
-
 $(document).ready(function () {
 
 	$('#addNewEntity').click(function () {
@@ -12,6 +7,7 @@ $(document).ready(function () {
 		ClearFieldsForCreatingNewEmployee();
 		switch (currentEntities) {
 			case 'positions': DisplayMessage('Добавление в систему новой должности', true);
+				DisplayUpdateButtonForPositionModal('#updateCurrentPosition', false);
 				DisplayModal('.pop-up-actionWithPosition', true);
 				break;
 			case 'employees': DisplayMessage('Создание аккаунта нового сотрудника', true);
@@ -32,7 +28,7 @@ $(document).ready(function () {
 			case 'positions': DisplayMessage('Должность будет перенесена в архив', true);
 				break;
 			case 'employees':
-				if (selectedEmployeeRow != 'undefined') {
+				if (selectedRow != 'undefined') {
 					DisplayMessage('Аккаунт сотрудника будет перенесён в архив', true);
 					DisplayModal('.pop-up-confirmEmployeeRemove', true);
 				}
@@ -49,15 +45,23 @@ $(document).ready(function () {
 	$('#updateEntity').click(function () {
 		clickSound.play();
 		switch (currentEntities) {
-			case 'positions': DisplayMessage('Изменить должность', true);
+			case 'positions':
+				if (selectedRow != 'undefined') {
+					DisplayUpdateButtonForPositionModal('#updateCurrentPosition', true);
+					let positionId = $(selectedRow.row).attr('positionid');
+					GetCurrentPositionData(positionId);
+					DisplayModal('.pop-up-actionWithPosition', true);
+				}
+				else {
+					DisplayMessage('Не выбрана должность', false);
+				}
 				break;
 			case 'employees':
-				if (selectedEmployeeRow != 'undefined') {
-					DisplayUpdateButtonForModal('#executeUpdateEmployeeData', true);					
-					let userId = $(selectedEmployeeRow.row).attr('userid');
+				if (selectedRow != 'undefined') {
+					DisplayUpdateButtonForEmployeeModal('#executeUpdateEmployeeData', true);					
+					let userId = $(selectedRow.row).attr('userid');
 					GetCurrentEmployeeData(userId);
 					DisplayModal('.pop-up-createNewEmployee', true);
-					break;
 				}
 				else {
 					DisplayMessage('Не выбран сотрудник', false);
@@ -71,7 +75,7 @@ $(document).ready(function () {
 
 	$('#recoverEntity').click(function () {
 		clickSound.play();
-		if (selectedEmployeeRow != 'undefined') {
+		if (selectedRow != 'undefined') {
 			DisplayModal('.pop-up-confirmRecover', true);
 		}
 		else {
@@ -100,11 +104,16 @@ $(document).ready(function () {
 		UpdateCurrentEmployeeData();
 	});
 
+	$('#executeUpdatePositionData').click(function () {
+		modifySound.play();
+		UpdateCurrentPositionData();
+	});
+
 	$('#employeeRemoveConfirmButton').click(function () {
 		removeSound.play();
 		DisplayModal('.pop-up-confirmEmployeeRemove', false);
-		if (selectedEmployeeRow != 'undefined') {
-			let userId = $(selectedEmployeeRow.row).attr('userid');
+		if (selectedRow != 'undefined') {
+			let userId = $(selectedRow.row).attr('userid');
 			ArchiveEmployee(userId);
 		}
 	});
@@ -117,8 +126,8 @@ $(document).ready(function () {
 	$('#recoverConfirmButton').click(function () {
 		recoverSound.play();
 		DisplayModal('.pop-up-confirmRecover', false);
-		if (selectedEmployeeRow != 'undefined') {
-			let userId = $(selectedEmployeeRow.row).attr('userid');
+		if (selectedRow != 'undefined') {
+			let userId = $(selectedRow.row).attr('userid');
 			RecoverEmployeeFromArchive(userId);
 		}
 	});
@@ -174,26 +183,6 @@ $(document).ready(function () {
 		DisplayArchiveControlPanel(false);
 		GetAppEmailAccounts();
 		DisplayMessage("Данные актуального почтового аккаунта сайта ТЧЭ-2 \"Омск\" загружаются", true);
-	});
-
-	$('#infoDisplay').on('click', 'tr', function () {
-		if ($(this).attr('userid') != null) {
-			clickSound.play();
-			if (selectedEmployeeRow != 'undefined') {
-				$(selectedEmployeeRow.row)
-					.css('color', '#04eaed')
-					.css('background-color', selectedEmployeeRow.defaultBGColor)
-					.css('box-shadow', 'none');
-			}
-
-			selectedEmployeeRow = {
-				row: $(this),
-				defaultColor: $(this).css('color'),
-				defaultBGColor: $(this).css('background-color')
-			};
-
-			$(this).css('background-color', 'gold').css('color', 'black').css('box-shadow', '0px 0px 7px 4px orange');
-		}
 	});
 });
 
@@ -255,15 +244,6 @@ function DisplayRequestErrorWarning(id) {
 	$(id).css('color', 'red');
 }
 
-function ClearFieldsForCreatingNewEmployee() {
-	$('#inpCreateEmail').val('');
-	$('#inpCreateLastName').val('');
-	$('#inpCreateFirstName').val('');
-	$('#inpCreateMiddleName').val('');
-	GetPositionsForSelect(1, 1);
-	GetRolesForSelect('#selectRole', 1, 1);
-}
-
 function CreateNewAccount() {
 
 	let employee = {
@@ -302,6 +282,7 @@ function GetAppEmailAccounts() {
 		url: 'https://localhost:44356/content/GetAppEmailAccount?page=' + pageNumber,
 		method: 'GET',
 		success: function (response) {
+			selectedRow = 'undefined';
 			let result = JSON.parse(response);
 			DisplayAppEmailAccounts(result);
 		},
@@ -339,7 +320,7 @@ function DisplayAppEmailAccounts(result) {
 				else {
 					$(row).css('background-color', '#3f3c3c');
 				}
-				$(row).attr('roleId', result[i].Id);
+				$(row).attr('emailId', result[i].Id);
 				GetTdForTable(table, row, i + 1);
 				GetTdForTable(table, row, result[i].Email);
 				let isActual = result[i].IsActual == 1 ? 'Да' : 'Нет';
@@ -376,7 +357,7 @@ function DisplayEmployeeDataInModal(user) {
 
 function UpdateCurrentEmployeeData() {
 
-	userId = $(selectedEmployeeRow.row).attr('userid');
+	userId = $(selectedRow.row).attr('userid');
 	email = $('#inpCreateEmail').val();
 	firstName = $('#inpCreateFirstName').val();
 	lastName = $('#inpCreateLastName').val();
@@ -445,23 +426,73 @@ function SaveNewPosition() {
 		abbreviation: $('#newPositionAbbreviation').val(),
 	};
 
+	if (positionData.positionName != '') {
+		$.ajax({
+			url: 'https://localhost:44356/content/saveNewPosition',
+			method: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify(positionData),
+			success: function (response) {
+				if (response != null) {
+					GetPositions(1);
+					DisplayMessage(response, true);
+					ClearFieldsPositionModal();
+				}
+				else {
+					DisplayModal('Ошибка сохранения данных');
+				}
+			},
+			error: function () {
+				DisplayMessage('Ошибка запроса сохранения новой должности', false);
+			}
+		});
+	}
+	else {
+		DisplayModal('.pop-up-actionWithPosition', false);
+		DisplayMessage('Нельзя сохранить должность без названия', false);
+	}
+}
+
+function GetCurrentPositionData(positionId) {
 	$.ajax({
-		url: 'https://localhost:44356/content/saveNewPosition',
-		method: 'POST',
-		contentType: 'application/json',
-		data: JSON.stringify(positionData),
+		url: 'https://localhost:44356/content/getCurrentPositionById?positionId=' + positionId,
+		method: 'GET',
 		success: function (response) {
-			if (response != null) {
+			let position = JSON.parse(response);
+			DisplayPositionDataInModal(position[0]);
+		},
+		error: function () {
+			DisplayMessage('Ошибка выполнения запроса на получение данных выбранной должности', false);
+		}
+	});
+}
+
+function DisplayPositionDataInModal(position) {
+	$('#newPositionAbbreviation').val(position.Abbreviation);
+	$('#newPositionName').val(position.FullName);
+}
+
+function UpdateCurrentPositionData() {
+	let positionId = $(selectedRow.row).attr('positionid');
+	let positionName = $('#newPositionName').val();
+	let abbreviation = $('#newPositionAbbreviation').val();
+
+	$.ajax({
+		url: 'https://localhost:44356/content/updatePositionData?positionId='
+			+ positionId + '&positionName=' + positionName + '&abbreviation=' + abbreviation,
+		method: 'PUT',
+		success: function (response) {
+			DisplayModal('.pop-up-actionWithPosition', false);
+			if (response != '') {
 				GetPositions(1);
 				DisplayMessage(response, true);
-				ClearFieldsPositionModal();
 			}
 			else {
-				DisplayModal('Ошибка сохранения данных');
+				DisplayMessage('Должность не существует', false);
 			}
 		},
 		error: function () {
-			DisplayMessage('Ошибка запроса сохранения новой должности', false);
+			DisplayMessage('Ошибка выполнения запроса на редактирование должности', false);
 		}
 	});
 }

@@ -152,6 +152,10 @@ select {
     justify-content: space-around;
 }
 
+#updateCurrentPosition {
+    display: none;
+}
+
 .pop-up-block {
     display: flex;
     flex-direction: column;
@@ -169,7 +173,8 @@ select {
     width: 60%;
 }
 
-#newPositionName {
+#newPositionName,
+#newPositionAbbreviation {
     width: 57%;
     text-align: center;
 }

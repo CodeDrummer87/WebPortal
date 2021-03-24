@@ -98,7 +98,7 @@ function GetEmployees(isActual) {
 		url: 'https://localhost:44356/content/getemployees?page=' + pageNumber + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
-			selectedEmployeeRow = 'undefined';
+			selectedRow = 'undefined';
 			let result = JSON.parse(response);
 			DisplayEmployees(result, isActual);
 		},
@@ -113,6 +113,7 @@ function GetPositions(isActual) {
 		url: 'https://localhost:44356/content/getpositions?page=' + pageNumber + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
+			selectedRow = 'undefined';
 			let result = JSON.parse(response);
 			DisplayPositions(result, isActual);
 		},
@@ -127,6 +128,7 @@ function GetRoles(isActual) {
 		url: 'https://localhost:44356/content/getroles?page=' + pageNumber + "&isActual=" + isActual,
 		method: 'GET',
 		success: function (response) {
+			selectedRow = 'undefined';
 			let result = JSON.parse(response);
 			DisplayRoles(result, isActual);
 		},
