@@ -30,11 +30,8 @@ $(document).ready(function () {
         switch (currentEntities) {
             case 'employees': currentEntityAttr = 'userid'; break;
             case 'positions': currentEntityAttr = 'positionId'; break;
-            case 'roles': currentEntityAttr = 'roleId'; break;
             case 'archEmployees': currentEntityAttr = 'userId'; break;
             case 'archPositions': currentEntityAttr = 'positionId'; break;
-            case 'archRoles': currentEntityAttr = 'roleId'; break;
-            case 'siteEmail': currentEntityAttr = 'emailId'; break;
             default: currentEntityAttr = 'undefined';
 		}
 

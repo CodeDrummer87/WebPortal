@@ -33,7 +33,7 @@ $(document).ready(function () {
 		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'roles';
-		DisplayArchiveControlPanel(false);
+		$('#controlPanel').css('display', 'none');
 		GetRoles(1);
 		DisplayMessage("Список ролей для сайта ТЧЭ-2 'Омск' загружается", true);
 	});
@@ -274,7 +274,6 @@ function DisplayRoles(result, isActual) {
 				GetTdForTable(table, row, result[i].Count);
 			}
 			div.appendChild(table);
-			SetControlPanels(count);
 		}
 	});
 }

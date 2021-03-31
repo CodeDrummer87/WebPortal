@@ -11,13 +11,11 @@ $(document).ready(function () {
 				DisplayModal('.pop-up-actionWithPosition', true);
 				break;
 			case 'employees': DisplayMessage('Создание аккаунта нового сотрудника', true);
-				DisplayUpdateButtonForModal('#executeUpdateEmployeeData', false);
+				DisplayUpdateButtonForEmployeeModal('#executeUpdateEmployeeData', false);
 				DisplayModal('.pop-up-createNewEmployee', true);
 				GetPositionsForSelect(1, 1);
 				GetRolesForSelect('#selectRole', 1, 1);
 				break;
-			case 'roles': DisplayMessage('Будет добавлена новая роль', true); break;
-			case 'siteEmail': DisplayMessage('Актуальный почтовый аккаунт для сайта ТЧЭ-2 \"Омск\" будет изменён', true); break;
 			default: DisplayMessage('Кнопка нажата, но контекст не выбран', false);
 		}
 	});
@@ -45,8 +43,6 @@ $(document).ready(function () {
 					DisplayMessage('Не выбран сотрудник', false);
 				}
 				break;
-			case 'roles': DisplayMessage('Выбранная роль будет перенесена в архив', true); break;
-			case 'siteEmail': DisplayMessage('Актуальный почтовый аккаунт для сайта ТЧЭ-2 \"Омск\" будет перенесён в архив', true); break;
 			default: DisplayMessage('Кнопка нажата, но контекст не выбран', false);
 		}
 	});
@@ -76,8 +72,6 @@ $(document).ready(function () {
 					DisplayMessage('Не выбран сотрудник', false);
 				}
 				break;
-			case 'roles': DisplayMessage('Изменить роль', true); break;
-			case 'siteEmail': DisplayMessage('Изменить ктуальный почтовый аккаунт для сайта ТЧЭ-2 \"Омск\"', true); break;
 			default: DisplayMessage('Кнопка нажата, но контекст не выбран', false);
 		}
 	});
@@ -205,20 +199,12 @@ $(document).ready(function () {
 		DisplayMessage("Архив должностей ТЧЭ-2 'Омск' загружается", true);
 	});
 
-	$('#archRoles').click(function () {
-		clickSound.play();
-		pageNumber = 0;
-		currentEntities = 'archRoles';
-		DisplayArchiveControlPanel(true);
-		GetRoles(0);
-		DisplayMessage("Архив ролей сайта ТЧЭ-2 'Омск' загружается", true);
-	});
-
 	$('#siteEmail').click(function () {
 		clickSound.play();
 		pageNumber = 0;
 		currentEntities = 'siteEmail';
-		DisplayArchiveControlPanel(false);
+		$('#controlPanel').css('display', 'none');
+		$('#paginationBlock').css('display', 'none');
 		GetAppEmailAccounts();
 		DisplayMessage("Данные актуального почтового аккаунта сайта ТЧЭ-2 \"Омск\" загружаются", true);
 	});
@@ -365,7 +351,6 @@ function DisplayAppEmailAccounts(result) {
 				GetTdForTable(table, row, isActual);
 			}
 			div.appendChild(table);
-			SetControlPanels(count);
 		}
 	});
 }
