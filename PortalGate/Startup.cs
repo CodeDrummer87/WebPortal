@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PortalGate.Models.DatabaseContext;
+using PortalGate.Modules.Implementation;
+using PortalGate.Modules.Interfaces;
 
 namespace PortalGate
 {
@@ -19,6 +21,9 @@ namespace PortalGate
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<PortalGateDbContext>(options => options.UseSqlServer(connection));
+
+            services.AddScoped<ITransfer, Transfer>();
+            services.AddScoped<ITransitData, TransitData>();
 
             services.AddControllersWithViews();
         }

@@ -1,32 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PortalGate.Models;
-using PortalGate.Models.DatabaseContext;
-using System;
-using System.Linq;
+using PortalGate.Modules.Interfaces;
 
 namespace PortalGate.Controllers
 {
     public class TransitController : Controller
     {
-        private PortalGateDbContext db;
+        private readonly ITransitData transitData;
 
-        public TransitController(PortalGateDbContext context)
+        public TransitController(ITransitData _transit)
         {
-            db = context;
+            transitData = _transit;
         }
 
         [HttpGet]
         public string TransitToUnit(int railroadId, int industryId, int unitId)
         {
-            UnitStartPageURI unitStartPage = db.UnitStartPageUries.FirstOrDefault(u =>
-                u.Railroad == railroadId &&
-                u.Industry == industryId
-                && u.Unit == unitId);
-
-            if (unitStartPage != null)
-                return unitStartPage.URI;
-
-            return String.Empty;
+            return transitData.TransitToUnit(railroadId, industryId, unitId);
         }
     }
 }
