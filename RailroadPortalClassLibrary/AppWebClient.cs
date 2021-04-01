@@ -1,0 +1,47 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Net.Http;
+using System.Text;
+
+namespace RailroadPortalClassLibrary
+{
+    public class AppWebClient
+    {
+        private static HttpClient client;
+        private string URL;
+
+        public AppWebClient(string URL)
+        {
+            client = new HttpClient();
+            this.URL = URL;
+            //System.Net.ServicePointManager.DnsRefreshTimeout = 120000;
+            var servicePoint = System.Net.ServicePointManager.FindServicePoint(new Uri(URL));
+            servicePoint.ConnectionLeaseTimeout = 0;
+        }
+
+        public string Send<T>(HttpMethod method, string path, T arg)
+        {
+            var jsonValues = JsonConvert.SerializeObject(arg);
+            var requestResult = client.SendAsync(new HttpRequestMessage()
+            {
+                RequestUri = new Uri(URL + '/' + path),
+                Method = method,
+                Content = new StringContent(jsonValues, Encoding.UTF8, "application/json")
+            }).Result;
+
+            return requestResult.Content.ReadAsStringAsync().Result;
+        }
+
+        public string Get(string path, string argsInString)
+        {
+            var requestResult = client.SendAsync(new HttpRequestMessage()
+            {
+                RequestUri = new Uri(URL + '/' + path + argsInString),
+                Method = HttpMethod.Get
+            }).Result;
+
+            return requestResult.Content.ReadAsStringAsync().Result;
+
+        }
+    }
+}

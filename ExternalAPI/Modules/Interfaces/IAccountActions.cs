@@ -1,10 +1,9 @@
 ﻿using RailroadPortalClassLibrary;
 
-namespace TCH2_WestSiberianRailroad.Modules.Interfaces
+namespace ExternalAPI.Modules.Interfaces
 {
     public interface IAccountActions
     {
-        User GetCurrentUser();
         string GetUrlUserAccount(int userPositionId);
         string GetViewUserAccount(int userPositionId);
     }

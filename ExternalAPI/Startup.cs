@@ -1,16 +1,15 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+using ExternalAPI.DatabaseContext;
+using ExternalAPI.Modules.Implementation;
+using ExternalAPI.Modules.Interfaces;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RailroadPortalClassLibrary;
-using System;
-using TCH2_WestSiberianRailroad.Models;
-using TCH2_WestSiberianRailroad.Modules.Implementation;
-using TCH2_WestSiberianRailroad.Modules.Interfaces;
+using Microsoft.Extensions.Hosting;
 
-namespace TCH2_WestSiberianRailroad
+namespace ExternalAPI
 {
     public class Startup
     {
@@ -30,42 +29,35 @@ namespace TCH2_WestSiberianRailroad
             {
                 options.AddPolicy("AllowSpecificOrigin", builder =>
                 {
-                    builder.WithOrigins("https://localhost:44303")
+                    builder.WithOrigins("https://localhost:44356")
                     .AllowAnyHeader()
                     .WithMethods("GET", "POST", "PUT", "DELETE");
                 });
             });
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Start/Index");
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
-                });
-
-            services.AddControllersWithViews();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IAccountActions, AccountActions>();
-            services.AddSingleton<ITCH2_WebClient, TCH2_WebClient>();
+
+            services.AddControllers();
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseCors("AllowSpecificOrigin");
 
-            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Start}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }

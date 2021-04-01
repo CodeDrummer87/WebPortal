@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PortalGate.Models.DatabaseContext;
 using PortalGate.Modules.Interfaces;
 using System.Linq;
 

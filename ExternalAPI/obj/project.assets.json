@@ -4930,7 +4930,6 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
       "Microsoft.EntityFrameworkCore.SqlServer >= 3.1.0",
-      "Newtonsoft.Json >= 13.0.1",
       "RailroadPortalClassLibrary >= 1.0.0"
     ]
   },
@@ -4941,11 +4940,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Vadik\\Desktop\\WebPortal\\TCH2_WestSiberianRailroad\\TCH2_WestSiberianRailroad.csproj",
-      "projectName": "TCH2_WestSiberianRailroad",
-      "projectPath": "C:\\Users\\Vadik\\Desktop\\WebPortal\\TCH2_WestSiberianRailroad\\TCH2_WestSiberianRailroad.csproj",
+      "projectUniqueName": "C:\\Users\\Vadik\\Desktop\\WebPortal\\ExternalAPI\\ExternalAPI.csproj",
+      "projectName": "ExternalAPI",
+      "projectPath": "C:\\Users\\Vadik\\Desktop\\WebPortal\\ExternalAPI\\ExternalAPI.csproj",
       "packagesPath": "C:\\Users\\Vadik\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Vadik\\Desktop\\WebPortal\\TCH2_WestSiberianRailroad\\obj\\",
+      "outputPath": "C:\\Users\\Vadik\\Desktop\\WebPortal\\ExternalAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -4984,10 +4983,6 @@
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",
             "version": "[3.1.0, )"
-          },
-          "Newtonsoft.Json": {
-            "target": "Package",
-            "version": "[13.0.1, )"
           }
         },
         "imports": [

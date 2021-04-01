@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,17 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\fonts\" />
-    <Folder Include="wwwroot\images\" />
-    <Folder Include="wwwroot\audio\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RailroadPortalClassLibrary\RailroadPortalClassLibrary.csproj" />
   </ItemGroup>
+
 
 </Project>

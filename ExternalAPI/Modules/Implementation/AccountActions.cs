@@ -1,36 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using RailroadPortalClassLibrary;
-using TCH2_WestSiberianRailroad.Modules.Interfaces;
+﻿using ExternalAPI.DatabaseContext;
+using ExternalAPI.Modules.Interfaces;
 
-namespace TCH2_WestSiberianRailroad.Modules.Implementation
+namespace ExternalAPI.Modules.Implementation
 {
     public class AccountActions : IAccountActions
     {
-        private readonly IHttpContextAccessor contextAccessor;
-        private TCH2_WebClient webClient;
 
-        public AccountActions(IHttpContextAccessor accessor)
+        private CurrentAppContext db;
+
+        public AccountActions(CurrentAppContext context)
         {
-            contextAccessor = accessor;
-            webClient = new TCH2_WebClient();
-        }
-
-        //.:: Написан корректно!
-        public User GetCurrentUser()
-        {
-            string sessionId = contextAccessor.HttpContext.Request.Cookies["SessionId"];
-
-            if (sessionId != null)
-            {
-                string userAsString = webClient.Get("api/account/getCurrentUser", "?sessionId=" + sessionId);
-                if (userAsString != string.Empty)
-                {
-                    return JsonConvert.DeserializeObject<User>(userAsString);
-                }
-            }
-
-            return null;
+            db = context;
         }
 
         public string GetUrlUserAccount(int userPositionId)

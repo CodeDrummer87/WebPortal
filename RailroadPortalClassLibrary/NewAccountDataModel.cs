@@ -1,4 +1,4 @@
-﻿namespace TCH2_WestSiberianRailroad.Models
+﻿namespace RailroadPortalClassLibrary
 {
     public class NewAccountDataModel
     {
