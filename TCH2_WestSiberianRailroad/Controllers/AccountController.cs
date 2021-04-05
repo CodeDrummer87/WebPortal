@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using TCH2_WestSiberianRailroad.Models;
 using TCH2_WestSiberianRailroad.Modules.Implementation;
 using TCH2_WestSiberianRailroad.Modules.Interfaces;
 
@@ -122,7 +121,7 @@ namespace TCH2_WestSiberianRailroad.Controllers
             return View(user);
         }
 
-        public IActionResult UnconfirmedAccount() 
+        public IActionResult UnconfirmedAccount()
         {
             return View();
         }

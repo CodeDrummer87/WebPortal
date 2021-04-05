@@ -16,7 +16,6 @@ namespace TCH2_WestSiberianRailroad.Modules.Implementation
             webClient = new TCH2_WebClient();
         }
 
-        //.:: Написан корректно!
         public User GetCurrentUser()
         {
             string sessionId = contextAccessor.HttpContext.Request.Cookies["SessionId"];

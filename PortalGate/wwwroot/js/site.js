@@ -204,6 +204,7 @@ function GetUnitsAndDisplay(railroadId, industryId) {
 			for (let i = 0; i < list.length; i++) {
 				let p = document.createElement('p');
 				p.setAttribute('id', list[i].id);
+				p.setAttribute('title', list[i].fullTitle);
 				p.innerText = list[i].shortTitle;
 				$('.units').append(p);
 			}

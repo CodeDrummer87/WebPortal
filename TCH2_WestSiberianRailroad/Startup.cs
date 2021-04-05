@@ -1,12 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RailroadPortalClassLibrary;
 using System;
-using TCH2_WestSiberianRailroad.Models;
 using TCH2_WestSiberianRailroad.Modules.Implementation;
 using TCH2_WestSiberianRailroad.Modules.Interfaces;
 
@@ -23,9 +20,6 @@ namespace TCH2_WestSiberianRailroad
 
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<CurrentAppContext>(options => options.UseSqlServer(connection));
-
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin", builder =>

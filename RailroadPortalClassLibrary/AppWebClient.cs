@@ -41,7 +41,28 @@ namespace RailroadPortalClassLibrary
             }).Result;
 
             return requestResult.Content.ReadAsStringAsync().Result;
+        }
 
+        public string Put(string path, string argsInString)
+        {
+            var requestResult = client.SendAsync(new HttpRequestMessage()
+            {
+                RequestUri = new Uri(URL + '/' + path + argsInString),
+                Method = HttpMethod.Put
+            }).Result;
+
+            return requestResult.Content.ReadAsStringAsync().Result;
+        }
+
+        public string Delete(string path, string argsInString)
+        {
+            var requestResult = client.SendAsync(new HttpRequestMessage()
+            {
+                RequestUri = new Uri(URL + '/' + path + argsInString),
+                Method = HttpMethod.Delete
+            }).Result;
+
+            return requestResult.Content.ReadAsStringAsync().Result;
         }
     }
 }

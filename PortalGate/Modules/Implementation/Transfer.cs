@@ -35,7 +35,8 @@ namespace PortalGate.Modules.Implementation
                     Select(u => new
                     {
                         u.Id,
-                        u.ShortTitle
+                        u.ShortTitle,
+                        u.FullTitle
                     }).Skip(page * 12).Take(12);
             }
             else
@@ -43,7 +44,8 @@ namespace PortalGate.Modules.Implementation
                 list = db.Units.Where(u => u.Railroad == railroadId && u.Industry == industryId).Select(u => new
                 {
                     u.Id,
-                    u.ShortTitle
+                    u.ShortTitle,
+                    u.FullTitle
                 });
             }
 
