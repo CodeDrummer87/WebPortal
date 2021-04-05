@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace ExternalAPI.Controllers
 {
+    /// <summary>
+    /// Account controller for GET/POST for managing users data
+    /// </summary>
     [Route("api/account")]
     [ApiController]
     public class AccountController : ControllerBase
@@ -25,6 +28,11 @@ namespace ExternalAPI.Controllers
             account = _account;
         }
 
+        /// <summary>
+        /// This Post method authenticates the user to the system
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>An user data</returns>
         [Route("signIn")]
         [HttpPost]
         public string Post([FromBody] SignInModel model)
@@ -39,6 +47,11 @@ namespace ExternalAPI.Controllers
             return null;
         }
 
+        /// <summary>
+        /// This POST method sends an email to the user if his email is not confirmed
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Path to page</returns>
         [Route("confirmEmails")]
         [HttpPost]
         public async Task<string> Post([FromBody] User user)
@@ -58,6 +71,11 @@ namespace ExternalAPI.Controllers
             return account.GetUrlUserAccount(user.PositionId);
         }
 
+        /// <summary>
+        /// This GET method returns current user data
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <returns>Current user data</returns>
         [Route("getCurrentUser")]
         [HttpGet]
         public string Get(string sessionId)
@@ -73,6 +91,11 @@ namespace ExternalAPI.Controllers
             return String.Empty;
         }
 
+        /// <summary>
+        /// This POST method saves admin fullname into database
+        /// </summary>
+        /// <param name="fullName"></param>
+        /// <returns>The path to the page if the full name of the admin was saved</returns>
         [Route("saveAdminFullName")]
         [HttpPost]
         public async Task<string> Post([FromBody] UserFullNameWithId fullName)
@@ -91,6 +114,11 @@ namespace ExternalAPI.Controllers
             return String.Empty;
         }
 
+        /// <summary>
+        /// This POST method creates an account for a new user
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>New user data</returns>
         [Route("createNewAccount")]
         [HttpPost]
         public async Task<string> Post([FromBody] NewAccountDataModel model)
@@ -120,6 +148,12 @@ namespace ExternalAPI.Controllers
             else return String.Empty;
         }
 
+        /// <summary>
+        /// This GET method to log out the user from the system
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <param name="success"></param>
+        /// <returns>Path to Index page</returns>
         [Route("logout")]
         [HttpGet]
         public async Task<string> Get(string sessionId, bool success)
@@ -131,6 +165,12 @@ namespace ExternalAPI.Controllers
             return "/Start/Index";
         }
 
+        /// <summary>
+        /// This GET method confirms the email of the employee
+        /// </summary>
+        /// <param name="hashForCheck"></param>
+        /// <param name="value"></param>
+        /// <returns>Current user data</returns>
         [Route("confirmedAccount")]
         [HttpGet]
         public string Get(string hashForCheck, int value)
@@ -162,6 +202,11 @@ namespace ExternalAPI.Controllers
             return hashed;
         }
 
+        /// <summary>
+        /// This GET method registers a user session
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [Route("registerSession")]
         [HttpGet]
         public async Task<string> Get(int userId)

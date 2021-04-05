@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace ExternalAPI.Controllers
 {
+    /// <summary>
+    /// Content сontroller for GET/POST/PUT/DELETE for administering system entities
+    /// </summary>
     [Route("api/content")]
     [ApiController]
     public class ContentController : ControllerBase
@@ -17,6 +20,13 @@ namespace ExternalAPI.Controllers
             db = context;
         }
 
+        /// <summary>
+        /// This GET method allows to get entities depending on entityType
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="isActual"></param>
+        /// <param name="entityType"></param>
+        /// <returns>Entity collection for page 'n'</returns>
         [Route("getEntity")]
         [HttpGet]
         public string Get(int page, byte isActual, string entityType)
@@ -41,6 +51,12 @@ namespace ExternalAPI.Controllers
             return response;
         }
 
+        /// <summary>
+        /// This GET method allows to get a count of entity depending on entityType
+        /// </summary>
+        /// <param name="isActual"></param>
+        /// <param name="entity"></param>
+        /// <returns>Entity count in JSON</returns>
         [Route("getCount")]
         [HttpGet]
         public string Get(byte isActual, string entity)
@@ -68,6 +84,11 @@ namespace ExternalAPI.Controllers
             return response;
         }
 
+        /// <summary>
+        /// This GET method allows to get current email of application
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns>Current email of application</returns>
         [Route("getAppEmailAccount")]
         [HttpGet]
         public string Get(int page)
@@ -82,6 +103,12 @@ namespace ExternalAPI.Controllers
             return JsonConvert.SerializeObject(result);
         }
 
+        /// <summary>
+        /// This GET method allows to get data of entity depending on entityType
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dataType"></param>
+        /// <returns></returns>
         [Route("getDataById")]
         [HttpGet]
         public string Get(int id, string dataType)
@@ -122,6 +149,17 @@ namespace ExternalAPI.Controllers
             return result;
         }
 
+        /// <summary>
+        /// This PUT method updates employee data
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="email"></param>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="middleName"></param>
+        /// <param name="positionId"></param>
+        /// <param name="roleId"></param>
+        /// <returns>Response message</returns>
         [Route("updateEmployeeData")]
         [HttpPut]
         public string Put(int userId, string email, string firstName, string lastName, string middleName, int positionId, int roleId)
@@ -142,6 +180,12 @@ namespace ExternalAPI.Controllers
             return "Сотрудник не найден";
         }
 
+        /// <summary>
+        /// This DELETE method removes entity data depending on entityType 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dataType"></param>
+        /// <returns>Response message</returns>
         [Route("removeDataById")]
         [HttpDelete]
         public string Delete(int id, string dataType)
@@ -177,6 +221,12 @@ namespace ExternalAPI.Controllers
             return responseMessage;
         }
 
+        /// <summary>
+        /// This PUT method recovers entity data by id depending on entityType
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dataType"></param>
+        /// <returns>Response message</returns>
         [Route("recoverDataById")]
         [HttpPut]
         public string Put(int id, string dataType)
@@ -213,6 +263,13 @@ namespace ExternalAPI.Controllers
             return responseMessage;
         }
 
+        /// <summary>
+        /// This PUT method updates position data
+        /// </summary>
+        /// <param name="positionId"></param>
+        /// <param name="positionName"></param>
+        /// <param name="abbreviation"></param>
+        /// <returns>Response message</returns>
         [Route("updatePositionData")]
         [HttpPut]
         public string Put(int positionId, string positionName, string abbreviation)
@@ -230,6 +287,11 @@ namespace ExternalAPI.Controllers
             return string.Empty;
         }
 
+        /// <summary>
+        /// This POST method creates a new position
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [Route("saveNewPosition")]
         [HttpPost]
         public string Post(NewPositionData data)
@@ -245,6 +307,8 @@ namespace ExternalAPI.Controllers
 
                 db.Positions.Add(newPosition);
                 db.SaveChanges();
+
+                return $"Должность {newPosition.FullName} создана";
             }
 
             return string.Empty;
