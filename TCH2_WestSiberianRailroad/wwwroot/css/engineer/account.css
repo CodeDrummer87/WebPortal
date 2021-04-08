@@ -1,0 +1,56 @@
+﻿#engineerInfoDisplay, #telegramCreating {
+    display: none;
+    margin: 20px;
+}
+
+#telegramCreating {
+    flex-direction: column;
+    justify-content: space-between;
+    align-content: space-around;
+    height: 100%;
+}
+
+#telegramCreatingButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.chapter {
+    font-family: serpentine;
+}
+
+#telegramSubject {
+    width: 75%;
+}
+
+#telegramSubject, #telegramContent {
+    margin: 0 2%;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    background-color: #2c2929;
+    color: #e99a28;
+}
+
+#telegramContent {
+    height: 65%;
+    padding: 1%;
+    font-family: Consolas;
+    font-size: 1.02rem;
+}
+
+#telegramCreatingButtons > button {
+    background-color: #fbe56c;
+    width: 40%;
+    height: 24px;
+}
+
+#telegramCreatingButtons > button:hover {
+    background-color: #48ff5b;
+}
+
+#telegramCreatingButtons > button:active {
+    background-color: #ff9600;
+}

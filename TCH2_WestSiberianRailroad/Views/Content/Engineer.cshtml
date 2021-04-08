@@ -10,17 +10,33 @@
     <div class="pageBlock" id="mainHeader">
         <div class="statusBlock">[Статус]</div>
         <div class="fullNameBlock">
-            <h3>Личный кабинет инженера: <span id="currentUserFullName">@Model.LastName @Model.FirstName @Model.MiddleName</span></h3>
+            <h3>Личный кабинет инженера по охране труда: <span id="currentUserFullName">@Model.LastName @Model.FirstName @Model.MiddleName</span></h3>
         </div>
         <div class="logoutBlock">
             <button id="logout" title="Выйти из системы">Выход</button>
         </div>
     </div>
     <div class="pageBlock" id="mainNav">
-
+        <div class="headerMainNav">
+            <h3>Телеграммы</h3>
+        </div>
+        <button class="mainNavButton" id="telegramsList">Список</button>
+        <button class="mainNavButton" id="createTelegram">Создать новую</button>
     </div>
     <div class="pageBlock" id="mainArticle">
-        <div id="infoDisplay"></div>
+        <div id="engineerInfoDisplay"></div>
+        <div id="telegramCreating">
+            <div id="telegramCreatingHeader">
+                <h3 class="chapter">Новая телеграмма</h3>
+                <hr />
+                <input type="text" id="telegramSubject" placeholder="Тема" autocomplete="off" />
+            </div>
+            <textarea id="telegramContent" placeholder="Содержание телеграммы"></textarea>
+            <div id="telegramCreatingButtons">
+                <button id="clearTelegram">Очистить</button>
+                <button id="creatingTelegramButton">Сохранить</button>
+            </div>
+        </div>
         <div id="paginationBlock">
             <div class="paginationPart" id="paginationLeftPart"><img src="~/images/arrow.png" id="pageLeft" title="Назад" /></div>
             <div id="paginationMiddle"></div>

@@ -38,6 +38,10 @@ article {
     grid-template: A;
 }
 
+.main {
+    background-color: #1c1c1c;
+}
+
 hr {
     width: 75%;
     border: none;

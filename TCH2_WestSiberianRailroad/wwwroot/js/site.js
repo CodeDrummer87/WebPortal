@@ -39,7 +39,7 @@ $(document).ready(function () {
             clickSound.play();
             if (selectedRow != 'undefined') {
                 $(selectedRow.row)
-                    .css('color', '#04eaed')
+                    .css('color', 'orange')
                     .css('background-color', selectedRow.defaultBGColor)
                     .css('box-shadow', 'none');
             }
