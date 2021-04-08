@@ -54,6 +54,16 @@ $(document).ready(function () {
         }
     });
 
+    window.onblur = function () {
+        $('#indicator').css('background-color', '#ffd800');
+        $('#currentState').css('color', '#ffd800').text('Нет на месте');
+    };
+
+    window.onfocus = function () {
+        $('#indicator').css('background-color', '#4cff00');
+        $('#currentState').css('color', '#4cff00').text('В депо');
+	}
+
 });
 
 function SignIn() {

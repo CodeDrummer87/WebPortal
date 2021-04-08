@@ -2,13 +2,16 @@
 @model User
 
 @{
-    ViewData["Title"] = $"Личный кабинет";
+    ViewData["Title"] = $"{Model.LastName}";
 }
 
 
 <div class="main">
     <div class="pageBlock" id="mainHeader">
-        <div class="statusBlock">[Статус]</div>
+        <div class="statusBlock" title="Текущий статус сотрудника">
+            <div id="indicator"></div>
+            <p id="currentState">В депо</p>
+        </div>
         <div class="fullNameBlock">
             <h3>Личный кабинет инженера по охране труда: <span id="currentUserFullName">@Model.LastName @Model.FirstName @Model.MiddleName</span></h3>
         </div>
