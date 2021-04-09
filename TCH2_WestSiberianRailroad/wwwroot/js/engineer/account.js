@@ -112,36 +112,9 @@ function DisplayTelegramsList(list) {
 		}
 		$(row).attr('telegramId', list[i].Id);
 		GetTdForTable(table, row, i + 1);
-		GetTdForTable(table, row, ShowDate(list[i].Created));
+		GetTdForTable(table, row, list[i].Created);
 		GetTdForTable(table, row, list[i].Subject);
 		GetTdForTable(table, row, list[i].IsActual == 1? 'Актуально' : 'Устарела');
 	}
 	div.appendChild(table);
-}
-
-function ShowDate(date) {
-	let created = new Date(date);
-
-	let year = created.getFullYear();
-	let month = created.getMonth();
-	let day = created.getDay();
-
-	return `${day} ${GetMonthByText(month)} ${year} г.`;
-}
-
-function GetMonthByText(month) {
-	switch (month) {
-		case 0: return 'января';
-		case 1: return 'февраля';
-		case 2: return 'марта';
-		case 3: return 'апреля';
-		case 4: return 'мая';
-		case 5: return 'июня';
-		case 6: return 'июля';
-		case 7: return 'августа';
-		case 8: return 'сентября';
-		case 9: return 'октября';
-		case 10: return 'ноября';
-		case 11: return 'декабря';
-	}
 }

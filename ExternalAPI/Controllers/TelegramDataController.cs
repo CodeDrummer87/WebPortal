@@ -33,13 +33,15 @@ namespace ExternalAPI.Controllers
         {
             string response = string.Empty;
 
+            DateTime today = DateTime.Today;
+
             await Task.Run(() =>
             {
                 if (model != null)
                 {
                     Telegram telegram = new Telegram
                     {
-                        Created = DateTime.Today,
+                        Created = $"{today.Day} {GetMonthByString(today.Month)} {today.Year} г.",
                         Subject = model.Subject,
                         Content = model.Content,
                         IsActual = 1
@@ -70,7 +72,7 @@ namespace ExternalAPI.Controllers
                 var list = db.LaborProtectionTelegrams.Select(t => new
                 {
                     Id = t.Id,
-                    Created = t.Created.Date,
+                    Created = t.Created,
                     Subject = t.Subject,
                     IsActual = t.IsActual
                 }).ToList();
@@ -78,6 +80,26 @@ namespace ExternalAPI.Controllers
             });
 
             return response;
+        }
+
+        private string GetMonthByString(int numberOfMonth)
+        {
+            return numberOfMonth switch
+            {
+                1 => "января",
+                2 => "февраля",
+                3 => "марта",
+                4 => "апреля",
+                5 => "мая",
+                6 => "июня",
+                7 => "июля",
+                8 => "августа",
+                9 => "сентября",
+                10 => "октября",
+                11 => "ноября",
+                12 => "декабря",
+                _ => throw new ArgumentException(message: "invalid int value", paramName: nameof(numberOfMonth)),
+            };
         }
     }
 }
