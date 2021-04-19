@@ -12,6 +12,9 @@ namespace ExternalAPI.DatabaseContext
         public DbSet<AppEmailAccount> AppEmailAccounts { get; set; }
         public DbSet<EmailConfirmModel> EmailConfirmModels { get; set; }
         public DbSet<Telegram> LaborProtectionTelegrams { get; set; }
+        public DbSet<ColumnType> ColumnTypes { get; set; }
+        public DbSet<Column> Columns { get; set; }
+        public DbSet<StaffOfColumn> ColumnStaff { get; set; }
 
         public CurrentAppContext(DbContextOptions<CurrentAppContext> options) : base(options)
         { }

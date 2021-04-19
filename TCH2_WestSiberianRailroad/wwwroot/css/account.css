@@ -150,7 +150,8 @@ table td {
     background-color: #ff9600;
 }
 
-#infoDisplay {
+#infoDisplay,
+#contractorInfoDisplay{
     height: 95%;
 }
 

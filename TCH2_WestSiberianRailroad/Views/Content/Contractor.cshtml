@@ -13,17 +13,30 @@
             <p id="currentState">В депо</p>
         </div>
         <div class="fullNameBlock">
-            <h3>Личный кабинет нарядчика локомотивных бригад: <span id="currentUserFullName">@Model.LastName @Model.FirstName @Model.MiddleName</span></h3>
+            <h3>Личный кабинет Зав.бригадами: <span id="currentUserFullName">@Model.LastName @Model.FirstName @Model.MiddleName</span></h3>
         </div>
         <div class="logoutBlock">
             <button id="logout" title="Выйти из системы">Выход</button>
         </div>
     </div>
     <div class="pageBlock" id="mainNav">
-
+        <div class="headerMainNav">
+            <h3 title="Нераспределённые по колоннам">Новые сотрудники</h3>
+        </div>
+        <button class="mainNavButton" id="">Список</button>
+        <div class="headerMainNav">
+            <h3 title="Действующие сотрудники">Сотрудники</h3>
+        </div>
+        <button class="mainNavButton" id="">Закреплённые</button>
+        <button class="mainNavButton" id="">Неакреплённые</button>
+        <button class="mainNavButton" id="">Архив</button>
+        <div class="headerMainNav">
+            <h3 title="Управление колоннами">Колонны</h3>
+        </div>
+        <button class="mainNavButton" id="columnsList">Список колонн</button>
     </div>
     <div class="pageBlock" id="mainArticle">
-        <div id="infoDisplay"></div>
+        <div id="contractorInfoDisplay"></div>
         <div id="paginationBlock">
             <div class="paginationPart" id="paginationLeftPart"><img src="~/images/arrow.png" id="pageLeft" title="Назад" /></div>
             <div id="paginationMiddle"></div>
@@ -39,3 +52,21 @@
 </div>
 
 <div class="nap"></div>
+
+<div class="pop-up-createNewColumn">
+    <h3 id="createNewColumn-header">Создание колонны</h3>
+
+    <p class="pop-up-newColumn-p">
+        Специализация
+        <select id="selectSpecializationForNewColumn"></select>
+    </p>
+    <p class="pop-up-newColumn-p">
+        Машинист-инструктор
+        <select id="selectTrainerForNewColumn"></select>
+    </p>
+
+    <div id="pop-up-createNewColumn-buttonsBlock">
+        <button id="close-pop-up-createColumn">Отмена</button>
+        <button id="createNewColumnButton">Создать</button>
+    </div>
+</div>

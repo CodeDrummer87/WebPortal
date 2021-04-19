@@ -4,18 +4,18 @@ using RailroadPortalClassLibrary;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using TCH2_WestSiberianRailroad.Modules.Implementation;
+using TCH2_WestSiberianRailroad.Modules.Interfaces;
 
 namespace TCH2_WestSiberianRailroad.Controllers
 {
     [Authorize]
     public class TelegramDataController : Controller
     {
-        private TCH2_WebClient webClient;
+        private ITCH2_WebClient webClient;
 
-        public TelegramDataController()
+        public TelegramDataController(ITCH2_WebClient _webClient)
         {
-            webClient = new TCH2_WebClient();
+            webClient = _webClient;
         }
 
         [HttpPost]
@@ -36,7 +36,7 @@ namespace TCH2_WestSiberianRailroad.Controllers
                         response = "Ответ сервера: телеграмма должна иметь тему и содержание";
                     }
                 }
-            });            
+            });
 
             return response;
         }

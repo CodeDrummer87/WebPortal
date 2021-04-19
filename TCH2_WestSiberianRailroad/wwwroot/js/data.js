@@ -4,17 +4,24 @@ $(document).ready(function () {
 
 	$('#addNewEntity').click(function () {
 		clickSound.play();
-		ClearFieldsForCreatingNewEmployee();
 		switch (currentEntities) {
 			case 'positions': DisplayMessage('Добавление в систему новой должности', true);
 				DisplayUpdateButtonForPositionModal('#updateCurrentPosition', false);
 				DisplayModal('.pop-up-actionWithPosition', true);
 				break;
-			case 'employees': DisplayMessage('Создание аккаунта нового сотрудника', true);
+			case 'employees':
+				ClearFieldsForCreatingNewEmployee();
+				DisplayMessage('Создание аккаунта нового сотрудника', true);
 				DisplayUpdateButtonForEmployeeModal('#executeUpdateEmployeeData', false);
 				DisplayModal('.pop-up-createNewEmployee', true);
 				GetPositionsForSelect(1, 1);
 				GetRolesForSelect('#selectRole', 1, 1);
+				break;
+			case 'columns': DisplayMessage('Создание новой колонны', true);
+				GetHeaderForCreateNewColumnModal(1);
+				GetColumnSpecializationForSelect();
+				GetTrainerForCreateNewColumn();
+				DisplayModal('.pop-up-createNewColumn', true);
 				break;
 			default: DisplayMessage('Кнопка нажата, но контекст не выбран', false);
 		}
